@@ -10,6 +10,8 @@ import Page5 from './views/nav2/Page5.vue'
 import Page6 from './views/nav3/Page6.vue'
 import echarts from './views/charts/echarts.vue'
 
+import Employee from './views/orgmgt/employee/Employee.vue'
+
 let routes = [
     {
         path: '/login',
@@ -39,21 +41,23 @@ let routes = [
     {
         path: '/',
         component: Home,
-        name: '导航二',
+        name: '组织管理',
         iconCls: 'fa fa-id-card-o',
         children: [
-            { path: '/page4', component: Page4, name: '页面4' },
-            { path: '/page5', component: Page5, name: '页面5' }
+            { path: '/page4', component: Page4, name: '组织架构' },
+            { path: '/page4', component: Page4, name: '部门管理' },
+            { path: '/Employee', component: Employee, name: '员工管理' }
         ]
     },
     {
         path: '/',
         component: Home,
-        name: '',
+        name: '安全管理',
         iconCls: 'fa fa-address-card',
-        leaf: true,//只有一个节点
+        //leaf: true,//只有一个节点
         children: [
-            { path: '/page6', component: Page6, name: '导航三' }
+            { path: '/page6', component: Page6, name: '用户管理' },
+            { path: '/page6', component: Page6, name: '角色管理' }
         ]
     },
     {

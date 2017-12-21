@@ -13,6 +13,7 @@ import Page6 from './views/nav3/Page6.vue'
 import echarts from './views/charts/echarts.vue'
 
 import Login from './views/login/Login.vue'
+import Organization from './views/orgmgt/organization/Organization.vue'
 import Employee from './views/orgmgt/employee/Employee.vue'
 /*
 // 配置路由
@@ -119,7 +120,7 @@ export default [
         name: '组织管理',
         iconCls: 'fa fa-id-card-o',
         children: [
-            { path: '/page4', component: Page4, name: '组织架构' },
+            { path: '/Organization', component: Organization, name: '组织架构' },
             { path: '/page4', component: Page4, name: '部门管理' },
             { path: '/Employee', component: Employee, name: '员工管理' }
         ]

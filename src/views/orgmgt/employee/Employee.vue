@@ -7,7 +7,7 @@
 					<el-input v-model="filters.name" placeholder="姓名"></el-input>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" v-on:click="getUsers">查询</el-button>
+					<el-button type="primary" v-on:click="getEmployees">查询</el-button>
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" @click="handleAdd">新增</el-button>
@@ -16,7 +16,7 @@
 		</el-col>
 
 		<!--列表-->
-		<el-table :data="users" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
+		<el-table :data="employees" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
 			<el-table-column type="selection" width="55">
 			</el-table-column>
 			<el-table-column type="index" width="60">
@@ -107,7 +107,7 @@
 <script>
 	import util from '../../../common/js/util'
 	//import NProgress from 'nprogress'
-	import { getUserListPage, removeUser, batchRemoveUser, editUser, addUser } from '../../../api/api';
+	import { getEmployeeListPage, removeEmployee, batchRemoveEmployee, editEmployee, addEmployee } from './api';
 
 	export default {
 		data() {
@@ -115,7 +115,7 @@
 				filters: {
 					name: ''
 				},
-				users: [],
+				employees: [],
 				total: 0,
 				page: 1,
 				listLoading: false,
@@ -163,21 +163,27 @@
 			},
 			handleCurrentChange(val) {
 				this.page = val;
-				this.getUsers();
+				this.getEmployees();
 			},
 			//获取用户列表
-			getUsers() {
+			getEmployees() {
 				let para = {
 					page: this.page,
 					name: this.filters.name
 				};
 				this.listLoading = true;
 				//NProgress.start();
-				getUserListPage(para).then((res) => {
-					this.total = res.data.total;
-					this.users = res.data.users;
+				getEmployeeListPage(para).then((res) => {
+					if( res && res.data){
+						this.total = res.data.total;
+						this.employees = res.data.employees;
+					
+					}
 					this.listLoading = false;
 					//NProgress.done();
+				}).catch((error) => {
+					this.listLoading = false;
+					console.log(error);
 				});
 			},
 			//删除
@@ -188,17 +194,17 @@
 					this.listLoading = true;
 					//NProgress.start();
 					let para = { id: row.id };
-					removeUser(para).then((res) => {
+					removeEmployee(para).then((res) => {
 						this.listLoading = false;
 						//NProgress.done();
 						this.$message({
 							message: '删除成功',
 							type: 'success'
 						});
-						this.getUsers();
+						this.getEmployees();
 					});
 				}).catch(() => {
-
+					this.listLoading = false;
 				});
 			},
 			//显示编辑界面
@@ -226,7 +232,7 @@
 							//NProgress.start();
 							let para = Object.assign({}, this.editForm);
 							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-							editUser(para).then((res) => {
+							editEmployee(para).then((res) => {
 								this.editLoading = false;
 								//NProgress.done();
 								this.$message({
@@ -235,7 +241,7 @@
 								});
 								this.$refs['editForm'].resetFields();
 								this.editFormVisible = false;
-								this.getUsers();
+								this.getEmployees();
 							});
 						});
 					}
@@ -250,7 +256,7 @@
 							//NProgress.start();
 							let para = Object.assign({}, this.addForm);
 							para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-							addUser(para).then((res) => {
+							addEmployee(para).then((res) => {
 								this.addLoading = false;
 								//NProgress.done();
 								this.$message({
@@ -259,7 +265,7 @@
 								});
 								this.$refs['addForm'].resetFields();
 								this.addFormVisible = false;
-								this.getUsers();
+								this.getEmployees();
 							});
 						});
 					}
@@ -277,22 +283,23 @@
 					this.listLoading = true;
 					//NProgress.start();
 					let para = { ids: ids };
-					batchRemoveUser(para).then((res) => {
-						this.listLoading = false;
+					batchRemoveEmployee(para).then((res) => {
+						
 						//NProgress.done();
 						this.$message({
 							message: '删除成功',
 							type: 'success'
 						});
-						this.getUsers();
+						this.getEmployees();
+						this.listLoading = false;
 					});
 				}).catch(() => {
-
+					this.listLoading = false;
 				});
 			}
 		},
-		mounted() {
-			this.getUsers();
+		mounted() {//默认页面加截方法
+			this.getEmployees();
 		}
 	}
 

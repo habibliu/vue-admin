@@ -178,6 +178,9 @@
 					this.users = res.data.users;
 					this.listLoading = false;
 					//NProgress.done();
+				}).catch(error=>{
+					debugger;
+					this.listLoading = false;
 				});
 			},
 			//删除
@@ -198,7 +201,7 @@
 						this.getUsers();
 					});
 				}).catch(() => {
-
+					this.listLoading = false;
 				});
 			},
 			//显示编辑界面
@@ -287,7 +290,7 @@
 						this.getUsers();
 					});
 				}).catch(() => {
-
+					this.listLoading = false;
 				});
 			}
 		},

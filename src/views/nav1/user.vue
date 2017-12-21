@@ -62,6 +62,9 @@
 					this.users = res.data.users;
 					this.loading = false;
 					//NProgress.done();
+				}).catch(error=>{
+					debugger;
+					this.loading = false;
 				});
 			}
 		},

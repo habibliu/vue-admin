@@ -75,7 +75,7 @@
 	export default {
 		data() {
 			return {
-				sysName:'VUEADMIN',
+				sysName:'车场管理平台',
 				collapsed:false,
 				sysUserName: '',
 				sysUserAvatar: '',

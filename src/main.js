@@ -11,7 +11,8 @@ import Vuex from 'vuex'
 //import 'nprogress/nprogress.css'
 import routes from './routes'
 import Mock from './mock'
-Mock.bootstrap();
+Mock.bootstrap();//启动mock
+
 import 'font-awesome/css/font-awesome.min.css'
 
 Vue.use(ElementUI)
@@ -29,6 +30,7 @@ router.beforeEach((to, from, next) => {
   if (to.path == '/login') {
     sessionStorage.removeItem('user');
   }
+  //未登录时，其他路由请求统一返回到login页面
   let user = JSON.parse(sessionStorage.getItem('user'));
   if (!user && to.path != '/login') {
     next({ path: '/login' })

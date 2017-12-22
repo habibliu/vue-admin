@@ -2,7 +2,7 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import LoginMock from '@/views/login/mock/mock';
 import EmployeeMock from '@/views/orgmgt/employee/mock/mock';
-
+import OrganizationMock from '@/views/orgmgt/organization/mock/mock';
 
 
 export default {
@@ -29,6 +29,7 @@ export default {
     try{
       LoginMock(mock);
       EmployeeMock(mock);
+      OrganizationMock(mock);
     }catch(error){
       console.log(error);
     }

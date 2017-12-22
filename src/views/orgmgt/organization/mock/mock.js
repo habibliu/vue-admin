@@ -1,19 +1,15 @@
-//import axios from 'axios';
-//import MockAdapter from 'axios-mock-adapter';
-import { Organizations } from './data';
-let _Organizations = Organizations;
+import { OrganizationData } from './data';
 
- debugger;  
+let _Organizations = OrganizationData;
+
 const OrganizationMock = mock => {
 
     //获取员工列表
     mock.onGet('/Organization/list').reply(config => {
-      debugger;
-     
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve([200, {
-            treeData: _Organizations
+            treeData: _Organizations//全部返回
           }]);
         }, 1000);
       });
@@ -79,4 +75,4 @@ const OrganizationMock = mock => {
     });
 };
 //要用这种方式导出;
-export default EmployeeMock;
+export default OrganizationMock;

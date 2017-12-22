@@ -1,5 +1,5 @@
 <template>
-  <el-row :gutter="20">
+  <el-row :gutter="20" v-loading="loading">
     <el-col :span="8" >
       <el-input
         placeholder="输入关键字进行过滤"
@@ -10,7 +10,9 @@
         :data="treeData"
         :props="defaultProps"
         default-expand-all
+        :expand-on-click-node="false"
         :filter-node-method="filterNode"
+        @node-click="handleNodeClick"
         ref="tree2">
       </el-tree>
     </el-col>
@@ -20,25 +22,61 @@
         <el-form :inline="true" :model="filters">
         
           <el-form-item>
-            <el-button type="primary" @click="handleAdd">新增</el-button>
+            <el-button type="primary" @click="handleAdd" :disabled="addFormVisible">新增</el-button>
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="handleAdd">修复</el-button>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="handleAdd">删除</el-button>
-          </el-form-item>
+         
         </el-form>
       </el-col>
       
-      <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm"  class="demo-ruleForm">
-        <el-form-item label="组织名称 " prop="name">
+      <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm"  class="demo-ruleForm" v-show="editFormVisible">
+        <el-form-item label="上级单位 ">
+          <el-input :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="组织名称 " prop="name" required="true" >
+          <el-input  v-model="editForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="组织编号"  prop="code" required="true">
+          <el-input  :disabled="true" v-model="editForm.code"></el-input>
+        </el-form-item>
+        <el-form-item label="组织类型"  prop="type" required="true" >
+          <el-radio-group v-model="editForm.type">
+            <el-radio class="radio" :label="1">区域公司</el-radio>
+            <el-radio class="radio" :label="2">分公司</el-radio>
+            <el-radio class="radio" :label="3">经销商</el-radio>
+            <el-radio class="radio" :label="4">管理处</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="负责人">
+          <el-input   v-model="editForm.director"></el-input>
+        </el-form-item>
+        <el-form-item label="联系电话">
+          <el-input  v-model="editForm.telephone"></el-input>
+        </el-form-item>
+        <el-form-item label="创建日期">
+          <el-date-picker type="date" placeholder="选择日期"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="地址">
+          <el-input type="textarea" v-model="editForm.addr"></el-input>
+        </el-form-item>
+
+        <el-form-item >
+          <el-button @click="cancelEdit">取消</el-button>
+          <el-button type="primary" >提交</el-button>
+          <el-button type="primary" @click="handleRemove">删除</el-button>
+        </el-form-item>
+      </el-form>
+
+      <el-form :model="addForm" label-width="80px" :rules="addFormVisible" ref="addForm"  class="demo-ruleForm" v-show="addFormVisible">
+        <el-form-item label="上级单位 ">
+          <el-input :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="组织名称 " prop="name" required="true" placeholder="请输入组织名称[区域公司|分公司|管理处]">
           <el-input  auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="组织编号">
-          <el-input  :disabled="true"></el-input>
+        <el-form-item label="组织编号"  prop="code" required="true">
+          <el-input  :disabled="formEditing" placeholder="请输入组织编号"></el-input>
         </el-form-item>
-        <el-form-item label="组织类型">
+        <el-form-item label="组织类型"  prop="type" required="true">
           <el-radio-group >
             <el-radio class="radio" :label="1">区域公司</el-radio>
             <el-radio class="radio" :label="2">分公司</el-radio>
@@ -59,11 +97,12 @@
           <el-input type="textarea" ></el-input>
         </el-form-item>
 
-        <el-form-item :align="center">
-          <el-button >取消</el-button>
+        <el-form-item >
+          <el-button @click="cancelAdd">取消</el-button>
           <el-button type="primary" >提交</el-button>
         </el-form-item>
       </el-form>
+
      
     </el-col>
 
@@ -88,11 +127,36 @@
         return data.label.indexOf(value) !== -1;
       },
       handleAdd(){
+        this.editFormVisible=false;
+        this.addFormVisible=true;
+      },
+      cancelAdd(){//取消新增
+        this.editFormVisible=true;
+        this.addFormVisible=false;
+      },
+      cancelEdit(){//取消编辑，恢复数据
 
       },
+      handleNodeClick(data){
+       
+        debugger;
+        this.selectedNode=data;
+        console.log(this.selectedNode);
+      },
+      initTreeData(){
+        let para = {};
+        this.loading = true;
 
-      getTreeData(){
-
+        getTreeData(para).then((res) => {
+          if( res && res.data){
+            this.treeData = res.data.treeData;
+          
+          }
+          this.loading = false;
+        }).catch((error) => {
+          this.loading = false;
+          console.log(error);
+        });
       }
     },
 
@@ -100,11 +164,42 @@
       return {
         filterText: '',
         treeData: [],
+        selectedNode:null,//选中的组织架构节点
+        loading: false,
+        formEditing : false,
+        editFormVisible: true,//编辑界面是否显示
+        editFormRules: {
+          name: [
+            { required: true, message: '请输入组织名称。', trigger: 'blur' }
+          ]
+        },
+        //编辑界面数据
+        editForm: {
+          id: 0,
+          code:'',
+          name: '',
+          type:'',
+          director: '',
+          telephone: '',
+          addr: ''
+        },
+        addFormVisible: false,//新增界面是否显示
+        addFormRules: {
+          name: [
+            { required: true, message: '请输入组织名称。', trigger: 'blur' }
+          ],
+          code: [
+            { required: true, message: '请输入组织编号。', trigger: 'blur' }
+          ]
+        },
         defaultProps: {
           children: 'children',
           label: 'label'
         }
       };
+    },
+    mounted() {//默认页面加截方法
+      this.initTreeData();
     }
  
   };

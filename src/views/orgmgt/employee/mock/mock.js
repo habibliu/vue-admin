@@ -3,7 +3,7 @@
 import { Employees } from './employeeData';
 let _Employees = Employees;
 
- debugger;  
+
 const EmployeeMock = mock => {
 
     //获取员工列表
@@ -25,6 +25,7 @@ const EmployeeMock = mock => {
 
     //获取员工列表（分页）
     mock.onGet('/Employee/listpage').reply(config => {
+      debugger;
       let {page, name} = config.params;
       let mockUsers = _Employees.filter(employee => {
         if (name && employee.name.indexOf(name) == -1) return false;

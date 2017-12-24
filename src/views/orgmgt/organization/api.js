@@ -8,4 +8,4 @@ export const removeOrganization = params => { return axios.get(`${base}/Organiza
 
 export const editOrganization = params => { return axios.get(`${base}/Organization/edit`, { params: params }); };
 
-export const addEmployee = params => { return axios.get(`${base}/Organization/add`, { params: params }); };
+export const addOrganization = params => { return axios.get(`${base}/Organization/add`, { params: params }); };

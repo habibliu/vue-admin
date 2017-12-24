@@ -14,7 +14,10 @@ import echarts from './views/charts/echarts.vue'
 
 import Login from './views/login/Login.vue'
 import Organization from './views/orgmgt/organization/Organization.vue'
+import Department from './views/orgmgt/department/Department.vue'
 import Employee from './views/orgmgt/employee/Employee.vue'
+
+import User from './views/pms/user/User.vue'
 /*
 // 配置路由
 Vue.use(Router)
@@ -121,7 +124,7 @@ export default [
         iconCls: 'fa fa-id-card-o',
         children: [
             { path: '/Organization', component: Organization, name: '组织架构' },
-            { path: '/page4', component: Page4, name: '部门管理' },
+            { path: '/Department', component: Department, name: '部门管理' },
             { path: '/Employee', component: Employee, name: '员工管理' }
         ]
     },
@@ -132,7 +135,7 @@ export default [
         iconCls: 'fa fa-address-card',
         //leaf: true,//只有一个节点
         children: [
-            { path: '/page6', component: Page6, name: '用户管理' },
+            { path: '/User', component: User, name: '用户管理' },
             { path: '/page6', component: Page6, name: '角色管理' }
         ]
     },

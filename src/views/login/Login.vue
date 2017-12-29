@@ -64,8 +64,10 @@
                       type: 'error'
                     });
                   } else {
+                    //保存登录用户信息到session中
                     sessionStorage.setItem('user', JSON.stringify(user));
-                    this.$router.push({ path: '/table' });
+                    //登录成功后，默认路由到组织架构页面
+                    this.$router.push({ path: '/Organization' });
                   }
                 });
                 this.logining = false;

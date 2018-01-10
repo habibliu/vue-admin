@@ -25,7 +25,7 @@
 				</el-table-column>
 				<el-table-column prop="name" label="姓名" width="120" sortable>
 				</el-table-column>
-				<el-table-column prop="account" label="登录账号" width="100" :formatter="formatSex" sortable>
+				<el-table-column prop="account" label="登录账号" width="100"  sortable>
 				</el-table-column>
 				<el-table-column prop="organization" label="所在单位" width="100" sortable>
 				</el-table-column>
@@ -70,7 +70,10 @@
 			selsChange: function (sels) {
 				this.sels = sels;
 			},
-			//获取用户列表
+			/**
+			 * 获取用户列表
+			 * @return {[type]} [description]
+			 */
 			getUser: function () {
 				let para = {
 					page: this.page,

@@ -101,18 +101,6 @@ export default [
         name: '',
         hidden: true
     },
-    //{ path: '/main', component: Main },
-    {
-        path: '/',
-        component: Home,
-        name: '参考样例',
-        iconCls: 'el-icon-message',//图标样式class
-        children: [
-            { path: '/main', component: Main, name: '主页', hidden: true },
-            { path: '/table', component: Table, name: 'Table' },
-            { path: '/form', component: Form, name: 'Form' }
-        ]
-    },
     {
         path: '/',
         component: Home,
@@ -138,9 +126,37 @@ export default [
     {
         path: '/',
         component: Home,
+        name: '基础资料',
+        iconCls: 'fa fa-address-card',
+        //leaf: true,//只有一个节点
+        children: [
+            { path: '/User', component: User, name: '学员资料' },
+            { path: '/page6', component: Page6, name: '家长资料' },
+            { path: '/page6', component: Page6, name: '教练资料' },
+            { path: '/page6', component: Page6, name: '场地资料' },
+            { path: '/page6', component: Page6, name: '课程资料' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '业务管理',
+        iconCls: 'fa fa-address-card',
+        //leaf: true,//只有一个节点
+        children: [
+            { path: '/User', component: User, name: '课程报名' },
+            { path: '/page6', component: Page6, name: '费用缴纳' },
+            { path: '/page6', component: Page6, name: '排期管理' },
+            { path: '/page6', component: Page6, name: '考勤管理' }            
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
         name: '分析报表',
         iconCls: 'fa fa-bar-chart',
         children: [
+            { path: '/echarts', component: echarts, name: '学员考勤' },
             { path: '/echarts', component: echarts, name: 'echarts' }
         ]
     },

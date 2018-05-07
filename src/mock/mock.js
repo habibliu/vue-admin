@@ -6,6 +6,8 @@ import OrganizationMock from '@/views/orgmgt/organization/mock/mock';
 import DepartmentMock from '@/views/orgmgt/department/mock/mock';
 import UserMock from '@/views/pms/user/mock/mock';
 
+import  StudentMock from '@/views/master/student/mock/mock';
+
 export default {
   /**
    * mock bootstrap
@@ -32,6 +34,7 @@ export default {
       OrganizationMock(mock);
       DepartmentMock(mock);
       UserMock(mock);
+      StudentMock(mock);
     }catch(error){
       console.log(error);
     }

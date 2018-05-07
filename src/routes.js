@@ -16,6 +16,8 @@ import Employee from './views/orgmgt/employee/Employee.vue'
 
 import User from './views/pms/user/User.vue'
 import Role from './views/pms/role/Role.vue'
+
+import Student from './views/master/student/Student.vue'
 /*
 // 配置路由
 Vue.use(Router)
@@ -157,7 +159,7 @@ export default [
         name: '分析报表',
         iconCls: 'fa fa-bar-chart',
         children: [
-            { path: '/echarts', component: echarts, name: '学员考勤' },
+            { path: '/404', component: echarts, name: '学员考勤' },
             { path: '/echarts', component: echarts, name: 'echarts' }
         ]
     },

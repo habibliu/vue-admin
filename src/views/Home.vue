@@ -75,7 +75,7 @@
 	export default {
 		data() {
 			return {
-				sysName:'车场管理平台',
+				sysName:'篮球培训管理后台',
 				collapsed:false,
 				sysUserName: '',
 				sysUserAvatar: '',

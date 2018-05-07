@@ -15,6 +15,7 @@ import Department from './views/orgmgt/department/Department.vue'
 import Employee from './views/orgmgt/employee/Employee.vue'
 
 import User from './views/pms/user/User.vue'
+import Role from './views/pms/role/Role.vue'
 /*
 // 配置路由
 Vue.use(Router)
@@ -120,7 +121,7 @@ export default [
         //leaf: true,//只有一个节点
         children: [
             { path: '/User', component: User, name: '用户管理' },
-            { path: '/page6', component: Page6, name: '角色管理' }
+            { path: '/Role', component: Role, name: '角色管理' }
         ]
     },
     {
@@ -130,7 +131,7 @@ export default [
         iconCls: 'fa fa-address-card',
         //leaf: true,//只有一个节点
         children: [
-            { path: '/User', component: User, name: '学员资料' },
+            { path: '/Student', component: Student, name: '学员资料' },
             { path: '/page6', component: Page6, name: '家长资料' },
             { path: '/page6', component: Page6, name: '教练资料' },
             { path: '/page6', component: Page6, name: '场地资料' },

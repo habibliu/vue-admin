@@ -18,6 +18,7 @@ import User from './views/pms/user/User.vue'
 import Role from './views/pms/role/Role.vue'
 
 import Student from './views/master/student/Student.vue'
+import Parent from './views/master/parent/Parent.vue'
 /*
 // 配置路由
 Vue.use(Router)
@@ -134,7 +135,7 @@ export default [
         //leaf: true,//只有一个节点
         children: [
             { path: '/Student', component: Student, name: '学员资料' },
-            { path: '/page6', component: Page6, name: '家长资料' },
+            { path: '/Parent', component: Parent, name: '家长资料' },
             { path: '/page6', component: Page6, name: '教练资料' },
             { path: '/page6', component: Page6, name: '场地资料' },
             { path: '/page6', component: Page6, name: '课程资料' }

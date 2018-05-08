@@ -7,6 +7,7 @@ import DepartmentMock from '@/views/orgmgt/department/mock/mock';
 import UserMock from '@/views/pms/user/mock/mock';
 
 import  StudentMock from '@/views/master/student/mock/mock';
+import  ParentMock from '@/views/master/parent/mock/mock';
 
 export default {
   /**
@@ -35,6 +36,7 @@ export default {
       DepartmentMock(mock);
       UserMock(mock);
       StudentMock(mock);
+      ParentMock(mock);
     }catch(error){
       console.log(error);
     }

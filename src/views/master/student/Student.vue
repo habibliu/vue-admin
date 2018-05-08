@@ -13,6 +13,9 @@
             <el-option label="女" value="0"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="家长">
+          <el-input v-model="filters.parent" placeholder="家长"></el-input>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" v-on:click="getStudents">查询</el-button>
         </el-form-item>
@@ -30,13 +33,15 @@
       </el-table-column>
       <el-table-column prop="name" label="姓名" width="120" sortable>
       </el-table-column>
-      <el-table-column prop="sex" label="性别" width="100" :formatter="formatSex" sortable>
+      <el-table-column prop="sex" label="性别" width="80" :formatter="formatSex" sortable>
       </el-table-column>
       <el-table-column prop="age" label="年龄" width="100" sortable>
       </el-table-column>
       <el-table-column prop="birth" label="生日" width="120" sortable>
       </el-table-column>
       <el-table-column prop="addr" label="地址" min-width="180" sortable>
+      </el-table-column>
+      <el-table-column prop="parent" label="家长" min-width="100" sortable>
       </el-table-column>
       <el-table-column label="操作" width="150">
         <template scope="scope">
@@ -121,7 +126,8 @@
       return {
         filters: {
           name: '',
-          sex: ''
+          sex: '',
+          parent: ''
         },
         Students: [],
         total: 0,
@@ -143,7 +149,8 @@
           sex: -1,
           age: 0,
           birth: '',
-          addr: ''
+          addr: '',
+          parent: '',
         },
 
         addFormVisible: false,//新增界面是否显示
@@ -159,7 +166,8 @@
           sex: -1,
           age: 0,
           birth: '',
-          addr: ''
+          addr: '',
+          parent: ''
         }
 
       }
@@ -178,14 +186,15 @@
         let para = {
           page: this.page,
           name: this.filters.name,
-          sex: this.filters.sex
+          sex: this.filters.sex,
+          parent: this.filters.parent
         };
         this.listLoading = true;
         getStudentListPage(para).then((res) => {
           debugger;
           if( res && res.data){
             this.total = res.data.total;
-            this.Students = res.data.Students;
+            this.Students = res.data.students;
           
           }
           this.listLoading = false;

@@ -1,6 +1,7 @@
 //import axios from 'axios';
 //import MockAdapter from 'axios-mock-adapter';
-import { Students } from './studentData';
+import { Students } from './students';
+debugger;
 let _Students = Students;
 
 
@@ -29,6 +30,7 @@ const StudentMock = mock => {
       let {page, name, sex} = config.params;
       let mockStudents = _Students.filter(student => {
         if (name && student.name.indexOf(name) == -1) return false;
+        if (sex && student.sex != sex) return false;
         return true;
       });
       let total = mockStudents.length;

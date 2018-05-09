@@ -1,9 +1,9 @@
 import Mock from 'mockjs';
 
-const Parents = [];
+const Coaches = [];
 
 for (let i = 0; i < 123; i++) {
-  Parents.push(Mock.mock({
+  Coaches.push(Mock.mock({
     id: Mock.Random.guid(),
     name: Mock.Random.cname(),
     addr: Mock.mock('@county(true)'),
@@ -14,4 +14,4 @@ for (let i = 0; i < 123; i++) {
   }));
 }
 
-export { Parents };
+export { Coaches };

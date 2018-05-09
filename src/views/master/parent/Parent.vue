@@ -26,7 +26,7 @@
     </el-col>
 
     <!--列表-->
-    <el-table :data="Parents" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
+    <el-table :data="parents" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
       <el-table-column type="selection" width="55">
       </el-table-column>
       <el-table-column type="index" width="60">
@@ -37,7 +37,7 @@
       </el-table-column>
       <el-table-column prop="birth" label="生日" width="120" sortable>
       </el-table-column>
-      <el-table-column prop="telphone" label="电话" width="100" sortable>
+      <el-table-column prop="telphone" label="电话" width="140" sortable>
       </el-table-column>
       <el-table-column prop="addr" label="地址" min-width="180" sortable>
       </el-table-column>
@@ -73,7 +73,7 @@
           <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
         </el-form-item>
          <el-form-item label="电话">
-          <el-input-number v-model="editForm.telphone" :min="0" :max="200"></el-input-number>
+          <el-input v-model="editForm.telphone"></el-input>
         </el-form-item>
         <el-form-item label="地址">
           <el-input type="textarea" v-model="editForm.addr"></el-input>
@@ -101,7 +101,7 @@
           <el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
         </el-form-item>
         <el-form-item label="电话">
-          <el-input-number v-model="addForm.telphone" :min="0" :max="200"></el-input-number>
+          <el-input v-model="addForm.telphone" ></el-input>
         </el-form-item>
         <el-form-item label="地址">
           <el-input type="textarea" v-model="addForm.addr"></el-input>

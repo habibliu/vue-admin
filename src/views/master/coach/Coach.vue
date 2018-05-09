@@ -13,11 +13,11 @@
             <el-option label="女" value="0"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="家长">
-          <el-input v-model="filters.parent" placeholder="家长"></el-input>
+        <el-form-item label="电话">
+          <el-input v-model="filters.telphone" placeholder="电话"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="getParents">查询</el-button>
+          <el-button type="primary" v-on:click="getCoachs">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleAdd">新增</el-button>
@@ -26,7 +26,7 @@
     </el-col>
 
     <!--列表-->
-    <el-table :data="students" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
+    <el-table :data="coaches" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
       <el-table-column type="selection" width="55">
       </el-table-column>
       <el-table-column type="index" width="60">
@@ -35,13 +35,11 @@
       </el-table-column>
       <el-table-column prop="sex" label="性别" width="80" :formatter="formatSex" sortable>
       </el-table-column>
-      <el-table-column prop="age" label="年龄" width="100" sortable>
-      </el-table-column>
       <el-table-column prop="birth" label="生日" width="120" sortable>
       </el-table-column>
-      <el-table-column prop="addr" label="地址" min-width="180" sortable>
+      <el-table-column prop="telphone" label="电话" width="140" sortable>
       </el-table-column>
-      <el-table-column prop="parent" label="家长" min-width="100" sortable>
+      <el-table-column prop="addr" label="地址" min-width="180" sortable>
       </el-table-column>
       <el-table-column label="操作" width="150">
         <template scope="scope">
@@ -70,22 +68,12 @@
             <el-radio class="radio" :label="0">女</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="年龄">
-          <el-input-number v-model="editForm.age" :min="0" :max="200"></el-input-number>
-        </el-form-item>
+       
         <el-form-item label="生日">
           <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
         </el-form-item>
-        <el-form-item label="家长">
-          <el-select v-model="value8" filterable placeholder="请选择">
-            <el-option
-              v-for="item in parents"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-
-            </el-option>
-          </el-select>
+         <el-form-item label="电话">
+          <el-input v-model="editForm.telphone"></el-input>
         </el-form-item>
         <el-form-item label="地址">
           <el-input type="textarea" v-model="editForm.addr"></el-input>
@@ -113,18 +101,7 @@
           <el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
         </el-form-item>
         <el-form-item label="电话">
-          <el-input-number v-model="addForm.age" :min="0" :max="200"></el-input-number>
-        </el-form-item>
-        <el-form-item label="家长">
-          <el-select v-model="value8" filterable placeholder="请选择">
-            <el-option
-              v-for="item in parents"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-
-            </el-option>
-          </el-select>
+          <el-input v-model="addForm.telphone" ></el-input>
         </el-form-item>
         <el-form-item label="地址">
           <el-input type="textarea" v-model="addForm.addr"></el-input>
@@ -141,7 +118,7 @@
 <script>
   import util from '../../../common/js/util'
   //import NProgress from 'nprogress'
-  import { getStudentListPage, removeStudent, batchRemoveStudent, editStudent, addStudent } from './api';
+  import { getCoachListPage, removeCoach, batchRemoveCoach, editCoach, addCoach } from './api';
 
   export default {
     data() {
@@ -149,10 +126,9 @@
         filters: {
           name: '',
           sex: '',
-          parent: ''
+          telphone: ''
         },
-        students: [],
-        parents: [],
+        coaches: [],
         total: 0,
         page: 1,
         listLoading: false,
@@ -170,10 +146,9 @@
           id: 0,
           name: '',
           sex: -1,
-          age: 0,
+          telphone: 0,
           birth: '',
           addr: '',
-          parent: '',
         },
 
         addFormVisible: false,//新增界面是否显示
@@ -187,10 +162,9 @@
         addForm: {
           name: '',
           sex: -1,
-          age: 0,
+          telphone: 0,
           birth: '',
           addr: '',
-          parent: ''
         }
 
       }
@@ -202,22 +176,22 @@
       },
       handleCurrentChange(val) {
         this.page = val;
-        this.getParents();
+        this.getCoachs();
       },
-      //获取用户列表
-      getParents() {
+      //获取家长列表
+      getCoachs() {
         let para = {
           page: this.page,
           name: this.filters.name,
           sex: this.filters.sex,
-          parent: this.filters.parent
+          telphone: this.filters.telphone
         };
         this.listLoading = true;
-        getStudentListPage(para).then((res) => {
+        getCoachListPage(para).then((res) => {
           debugger;
           if( res && res.data){
             this.total = res.data.total;
-            this.students = res.data.students;
+            this.coaches = res.data.coaches;
           
           }
           this.listLoading = false;
@@ -234,14 +208,14 @@
           this.listLoading = true;
           //NProgress.start();
           let para = { id: row.id };
-          removeStudent(para).then((res) => {
+          removeCoach(para).then((res) => {
             this.listLoading = false;
             //NProgress.done();
             this.$message({
               message: '删除成功',
               type: 'success'
             });
-            this.getParents();
+            this.getCoachs();
           });
         }).catch(() => {
           this.listLoading = false;
@@ -258,7 +232,7 @@
         this.addForm = {
           name: '',
           sex: -1,
-          age: 0,
+          telphone: 0,
           birth: '',
           addr: ''
         };
@@ -272,7 +246,7 @@
               //NProgress.start();
               let para = Object.assign({}, this.editForm);
               para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-              editStudent(para).then((res) => {
+              editCoach(para).then((res) => {
                 this.editLoading = false;
                 //NProgress.done();
                 this.$message({
@@ -281,7 +255,7 @@
                 });
                 this.$refs['editForm'].resetFields();
                 this.editFormVisible = false;
-                this.getParents();
+                this.getCoachs();
               });
             });
           }
@@ -296,7 +270,7 @@
               //NProgress.start();
               let para = Object.assign({}, this.addForm);
               para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-              addStudent(para).then((res) => {
+              addCoach(para).then((res) => {
                 this.addLoading = false;
                 //NProgress.done();
                 this.$message({
@@ -305,7 +279,7 @@
                 });
                 this.$refs['addForm'].resetFields();
                 this.addFormVisible = false;
-                this.getParents();
+                this.getCoachs();
               });
             });
           }
@@ -323,14 +297,14 @@
           this.listLoading = true;
           //NProgress.start();
           let para = { ids: ids };
-          batchRemoveStudent(para).then((res) => {
+          batchRemoveCoach(para).then((res) => {
             
             //NProgress.done();
             this.$message({
               message: '删除成功',
               type: 'success'
             });
-            this.getParents();
+            this.getCoachs();
             this.listLoading = false;
           });
         }).catch(() => {
@@ -339,7 +313,7 @@
       }
     },
     mounted() {//默认页面加截方法
-      this.getParents();
+      this.getCoachs();
     }
   }
 

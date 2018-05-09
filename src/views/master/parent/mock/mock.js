@@ -27,11 +27,11 @@ const ParentMock = mock => {
     //获取员工列表（分页）
     mock.onGet('/Parent/listpage').reply(config => {
       debugger;
-      let {page, name, sex, parent} = config.params;
+      let {page, name, sex, phone} = config.params;
       let mockParents = _Parents.filter(parent => {
         if (name && parent.name.indexOf(name) == -1) return false;
         if (sex && parent.sex != sex) return false;
-        if (parent && parent.parent.indexOf(parent) == -1) return false;
+        if (phone && parent.phone.indexOf(phone) == -1) return false;
         return true;
       });
       let total = mockParents.length;

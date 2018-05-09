@@ -5,7 +5,6 @@ let base = '';
 export const getParentList = params => { return axios.get(`${base}/Parent/list`, { params: params }); };
 
 export const getParentListPage = params => { 
-  debugger;
   return axios.get(`${base}/Parent/listpage`, { params: params }); 
 };
 

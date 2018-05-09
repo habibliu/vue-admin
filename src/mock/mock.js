@@ -8,6 +8,7 @@ import UserMock from '@/views/pms/user/mock/mock';
 
 import  StudentMock from '@/views/master/student/mock/mock';
 import  ParentMock from '@/views/master/parent/mock/mock';
+import  CoachMock from '@/views/master/coach/mock/mock';
 
 export default {
   /**
@@ -37,6 +38,7 @@ export default {
       UserMock(mock);
       StudentMock(mock);
       ParentMock(mock);
+      CoachMock(mock);
     }catch(error){
       console.log(error);
     }

@@ -15,6 +15,7 @@ import  CourseMock from '@/views/master/course/mock/mock';
 import  CourseRegistrationMock from '@/views/trm/coursereg/mock/mock';
 import  CoursePaymentMock from '@/views/trm/payment/mock/mock';
 import  CourseScheduleMock from '@/views/trm/schedule/mock/mock';
+import  AttendanceMock from '@/views/trm/attendance/mock/mock';
 
 export default {
   /**
@@ -50,6 +51,7 @@ export default {
       CourseRegistrationMock(mock);
       CoursePaymentMock(mock);
       CourseScheduleMock(mock);
+      AttendanceMock(mock);
     }catch(error){
       console.log(error);
     }

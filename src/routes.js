@@ -21,7 +21,7 @@ import Student from './views/master/student/Student.vue'
 import Parent from './views/master/parent/Parent.vue'
 import Coach from './views/master/coach/Coach.vue'
 import SportVenue from './views/master/venue/SportVenue.vue'
-
+import Course from './views/master/course/Course.vue'
 /*
 // 配置路由
 Vue.use(Router)
@@ -141,7 +141,7 @@ export default [
             { path: '/Parent', component: Parent, name: '家长资料' },
             { path: '/Coach', component: Coach, name: '教练资料' },
             { path: '/SportVenue', component: SportVenue, name: '场地资料' },
-            { path: '/page6', component: Page6, name: '课程资料' }
+            { path: '/Course', component: Course, name: '课程资料' }
         ]
     },
     {

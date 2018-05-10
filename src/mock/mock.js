@@ -10,6 +10,7 @@ import  StudentMock from '@/views/master/student/mock/mock';
 import  ParentMock from '@/views/master/parent/mock/mock';
 import  CoachMock from '@/views/master/coach/mock/mock';
 import  VenueMock from '@/views/master/venue/mock/mock';
+import  CourseMock from '@/views/master/course/mock/mock';
 
 export default {
   /**
@@ -41,6 +42,7 @@ export default {
       ParentMock(mock);
       CoachMock(mock);
       VenueMock(mock);
+      CourseMock(mock);
     }catch(error){
       console.log(error);
     }

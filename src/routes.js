@@ -24,6 +24,7 @@ import SportVenue from './views/master/venue/SportVenue.vue'
 import Course from './views/master/course/Course.vue'
 
 import CourseRegistration from './views/trm/coursereg/CourseRegistration.vue'
+import CoursePayment from './views/trm/payment/CoursePayment.vue'
 /*
 // 配置路由
 Vue.use(Router)
@@ -154,7 +155,7 @@ export default [
         //leaf: true,//只有一个节点
         children: [
             { path: '/CourseRegistration', component: CourseRegistration, name: '课程报名' },
-            { path: '/page6', component: Page6, name: '费用缴纳' },
+            { path: '/CoursePayment', component: CoursePayment, name: '费用缴纳' },
             { path: '/page6', component: Page6, name: '排期管理' },
             { path: '/page6', component: Page6, name: '考勤管理' }            
         ]

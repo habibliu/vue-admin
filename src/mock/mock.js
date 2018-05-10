@@ -5,12 +5,14 @@ import EmployeeMock from '@/views/orgmgt/employee/mock/mock';
 import OrganizationMock from '@/views/orgmgt/organization/mock/mock';
 import DepartmentMock from '@/views/orgmgt/department/mock/mock';
 import UserMock from '@/views/pms/user/mock/mock';
-
+//基础资料
 import  StudentMock from '@/views/master/student/mock/mock';
 import  ParentMock from '@/views/master/parent/mock/mock';
 import  CoachMock from '@/views/master/coach/mock/mock';
-import  VenueMock from '@/views/master/venue/mock/mock';
+import  SportVenueMock from '@/views/master/venue/mock/mock';
 import  CourseMock from '@/views/master/course/mock/mock';
+//业务管理
+import  CourseRegistrationMock from '@/views/trm/coursereg/mock/mock';
 
 export default {
   /**
@@ -41,8 +43,9 @@ export default {
       StudentMock(mock);
       ParentMock(mock);
       CoachMock(mock);
-      VenueMock(mock);
+      SportVenueMock(mock);
       CourseMock(mock);
+      CourseRegistrationMock(mock);
     }catch(error){
       console.log(error);
     }

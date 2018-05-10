@@ -14,6 +14,7 @@ import  CourseMock from '@/views/master/course/mock/mock';
 //业务管理
 import  CourseRegistrationMock from '@/views/trm/coursereg/mock/mock';
 import  CoursePaymentMock from '@/views/trm/payment/mock/mock';
+import  CourseScheduleMock from '@/views/trm/schedule/mock/mock';
 
 export default {
   /**
@@ -48,6 +49,7 @@ export default {
       CourseMock(mock);
       CourseRegistrationMock(mock);
       CoursePaymentMock(mock);
+      CourseScheduleMock(mock);
     }catch(error){
       console.log(error);
     }

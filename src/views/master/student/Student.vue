@@ -14,7 +14,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="家长">
-          <el-input v-model="filters.parent" placeholder="家长"></el-input>
+          <el-input v-model="filters.parentName" placeholder="家长"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" v-on:click="getParents">查询</el-button>
@@ -31,7 +31,7 @@
       </el-table-column>
       <el-table-column type="index" width="60">
       </el-table-column>
-      <el-table-column prop="name" label="姓名" width="120" sortable>
+      <el-table-column prop="name" label="学员姓名" width="120" sortable>
       </el-table-column>
       <el-table-column prop="sex" label="性别" width="100" :formatter="formatSex" sortable>
       </el-table-column>
@@ -43,7 +43,9 @@
       </el-table-column>
       <el-table-column prop="school" label="就读学校" width="120" sortable>
       </el-table-column>
-      <el-table-column prop="parentName" label="家长" min-width="80" sortable>
+      <el-table-column prop="parentName" label="家长姓名" min-width="100" sortable>
+      </el-table-column>
+      <el-table-column prop="parentTelephone" label="家长电话" min-width="120" sortable>
       </el-table-column>
       <el-table-column prop="addr" label="地址" min-width="180" sortable>
       </el-table-column>
@@ -75,6 +77,9 @@
                 <el-radio class="radio" :label="1">男</el-radio>
                 <el-radio class="radio" :label="0">女</el-radio>
               </el-radio-group>
+            </el-form-item>
+            <el-form-item label="手机号" prop="parentTelephone">
+              <el-input v-model="editForm.telephone" placeholder="学员手机号码"></el-input>
             </el-form-item>
             <el-form-item label="生日">
               <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
@@ -199,7 +204,7 @@
         filters: {
           name: '',
           sex: '',
-          parent: ''
+          parentName: ''
         },
         students: [],
         schools:[],

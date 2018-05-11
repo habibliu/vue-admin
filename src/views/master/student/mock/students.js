@@ -37,7 +37,7 @@ for (let i = 0; i < 150; i++) {
     birth: birthDate,
     height: Mock.Random.integer(120,170),
     age:age,
-    school: schools[Mock.Random.integer(0,schools.length-1)],
+    school: schools[Mock.Random.integer(0,schools.length-1)].name,
     sex: Mock.Random.integer(0, 1),
     telphone:Mock.Random.integer(13000000000,13999999999),
     parentName: Mock.Random.cname(),

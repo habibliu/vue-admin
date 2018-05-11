@@ -23,11 +23,11 @@ const StudentMock = mock => {
 
     //获取学生列表（分页）
     mock.onGet('/Student/listpage').reply(config => {
-      let {page, name, sex, parent} = config.params;
+      let {page, name, sex, parentName} = config.params;
       let mockStudents = _Students.filter(student => {
         if (name && student.name.indexOf(name) == -1) return false;
         if (sex && student.sex != sex) return false;
-        if (parent && student.parent.indexOf(parent) == -1) return false;
+        if (parentName && student.parentName.indexOf(parentName) == -1) return false;
         return true;
       });
       let total = mockStudents.length;

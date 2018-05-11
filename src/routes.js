@@ -143,7 +143,6 @@ export default [
         //leaf: true,//只有一个节点
         children: [
             { path: '/Student', component: Student, name: '学员资料' },
-            { path: '/Parent', component: Parent, name: '家长资料' },
             { path: '/Coach', component: Coach, name: '教练资料' },
             { path: '/SportVenue', component: SportVenue, name: '场地资料' },
             { path: '/Course', component: Course, name: '课程资料' }

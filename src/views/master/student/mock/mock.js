@@ -1,13 +1,13 @@
 //import axios from 'axios';
 //import MockAdapter from 'axios-mock-adapter';
-import { Students } from './students';
+import { Students ,Parents } from './students';
 debugger;
 let _Students = Students;
-
+let _Parents = Parents;
 
 const StudentMock = mock => {
 
-    //获取员工列表
+    //获取学生列表
     mock.onGet('/Student/list').reply(config => {
       debugger;
       let {name} = config.params;
@@ -24,7 +24,7 @@ const StudentMock = mock => {
       });
     });
 
-    //获取员工列表（分页）
+    //获取学生列表（分页）
     mock.onGet('/Student/listpage').reply(config => {
       debugger;
       let {page, name, sex, parent} = config.params;
@@ -46,7 +46,7 @@ const StudentMock = mock => {
       });
     });
 
-    //删除员工
+    //删除学生
     mock.onGet('/Student/remove').reply(config => {
       let { id } = config.params;
       _Students = _Students.filter(u => u.id !== id);
@@ -60,7 +60,7 @@ const StudentMock = mock => {
       });
     });
 
-    //批量删除员工
+    //批量删除学生
     mock.onGet('/Student/batchremove').reply(config => {
       let { ids } = config.params;
       ids = ids.split(',');
@@ -75,7 +75,7 @@ const StudentMock = mock => {
       });
     });
 
-    //编辑员工
+    //编辑学生
     mock.onGet('/Student/edit').reply(config => {
       let { id, name, addr, age, birth, sex } = config.params;
       _Students.some(u => {
@@ -98,7 +98,7 @@ const StudentMock = mock => {
       });
     });
 
-    //新增员工
+    //新增学生
     mock.onGet('/Student/add').reply(config => {
       let { name, addr, age, birth, sex } = config.params;
       _Students.push({
@@ -113,6 +113,24 @@ const StudentMock = mock => {
           resolve([200, {
             code: 200,
             msg: '新增成功'
+          }]);
+        }, 500);
+      });
+    });
+
+    //获取家长列表（分页）
+    mock.onGet('/Student/listParents').reply(config => {
+      debugger;
+      let { name, phone} = config.params;
+      let mockParents = _Parents.filter(parent => {
+        if (name && parent.name.indexOf(name) == -1) return false;
+        if (phone && parent.parent.indexOf(parent) == -1) return false;
+        return true;
+      });
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            parents: mockParents
           }]);
         }, 500);
       });

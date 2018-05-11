@@ -5,7 +5,6 @@ let base = '';
 export const getStudentList = params => { return axios.get(`${base}/Student/list`, { params: params }); };
 
 export const getStudentListPage = params => { 
-  debugger;
   return axios.get(`${base}/Student/listpage`, { params: params }); 
 };
 
@@ -16,3 +15,5 @@ export const batchRemoveStudent = params => { return axios.get(`${base}/Student/
 export const editStudent = params => { return axios.get(`${base}/Student/edit`, { params: params }); };
 
 export const addStudent = params => { return axios.get(`${base}/Student/add`, { params: params }); };
+//取家长列表
+export const getParentList = params => { return axios.get(`${base}/Student/listParents`, { params: params }); };

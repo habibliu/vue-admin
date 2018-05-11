@@ -70,20 +70,23 @@
             <el-radio class="radio" :label="0">女</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="年龄">
-          <el-input-number v-model="editForm.age" :min="0" :max="200"></el-input-number>
-        </el-form-item>
+        
         <el-form-item label="生日">
           <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
         </el-form-item>
+        <el-form-item label="年龄">
+          <el-input-number v-model="editForm.age" :disabled=true></el-input-number>
+        </el-form-item>
         <el-form-item label="家长">
-          <el-select v-model="value8" filterable placeholder="请选择">
+          <el-select v-model="editForm.parent" filterable placeholder="请选择">
             <el-option
               v-for="item in parents"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-
+              :key="item.id"
+              :label="item.name + (item.sex==1?' 男 ':' 女 ') + item.telephone"
+              :value="item.id">
+              <span style="float: left">{{ item.name }}</span>
+              <span style="padding-left: 40px;">{{ item.sex==1?'男':'女' }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.telephone }}</span>
             </el-option>
           </el-select>
         </el-form-item>
@@ -116,13 +119,15 @@
           <el-input-number v-model="addForm.age" :min="0" :max="200"></el-input-number>
         </el-form-item>
         <el-form-item label="家长">
-          <el-select v-model="value8" filterable placeholder="请选择">
+          <el-select v-model="addForm.parent" filterable placeholder="请选择">
             <el-option
               v-for="item in parents"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-
+              :key="item.id"
+              :label="item.name + (item.sex==1?' 男 ':' 女 ') + item.telephone"
+              :value="item.id">
+              <span style="float: left">{{ item.name }}</span>
+              <span style="padding-left: 40px;">{{ item.sex==1?'男':'女' }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.telephone }}</span>
             </el-option>
           </el-select>
         </el-form-item>
@@ -141,7 +146,7 @@
 <script>
   import util from '../../../common/js/util'
   //import NProgress from 'nprogress'
-  import { getStudentListPage, removeStudent, batchRemoveStudent, editStudent, addStudent } from './api';
+  import { getStudentListPage, removeStudent, batchRemoveStudent, editStudent, addStudent, getParentList } from './api';
 
   export default {
     data() {
@@ -150,6 +155,10 @@
           name: '',
           sex: '',
           parent: ''
+        },
+        parentFilters:{//家长过滤器
+          name: '',
+          telphone: ''
         },
         students: [],
         parents: [],
@@ -204,8 +213,8 @@
         this.page = val;
         this.getParents();
       },
-      //获取用户列表
-      getParents() {
+      //获取学生列表
+      getStudents() {
         let para = {
           page: this.page,
           name: this.filters.name,
@@ -214,7 +223,6 @@
         };
         this.listLoading = true;
         getStudentListPage(para).then((res) => {
-          debugger;
           if( res && res.data){
             this.total = res.data.total;
             this.students = res.data.students;
@@ -223,6 +231,22 @@
           this.listLoading = false;
         }).catch((error) => {
           this.listLoading = false;
+          console.log(error);
+        });
+      },
+      //获取家长列表
+      getParents(){
+        let para = {
+          name: this.parentFilters.name,
+          telphone: this.parentFilters.telphone
+        };
+        
+        getParentList(para).then((res) => {
+          debugger;
+          if( res && res.data){
+            this.parents = res.data.parents;
+          }
+        }).catch((error) => {
           console.log(error);
         });
       },
@@ -241,7 +265,7 @@
               message: '删除成功',
               type: 'success'
             });
-            this.getParents();
+            this.getStudents();
           });
         }).catch(() => {
           this.listLoading = false;
@@ -249,11 +273,13 @@
       },
       //显示编辑界面
       handleEdit: function (index, row) {
+        this.getParents();
         this.editFormVisible = true;
         this.editForm = Object.assign({}, row);
       },
       //显示新增界面
       handleAdd: function () {
+        this.getParents();
         this.addFormVisible = true;
         this.addForm = {
           name: '',
@@ -281,7 +307,7 @@
                 });
                 this.$refs['editForm'].resetFields();
                 this.editFormVisible = false;
-                this.getParents();
+                this.getStudents();
               });
             });
           }
@@ -305,7 +331,7 @@
                 });
                 this.$refs['addForm'].resetFields();
                 this.addFormVisible = false;
-                this.getParents();
+                this.getStudents();
               });
             });
           }
@@ -330,7 +356,7 @@
               message: '删除成功',
               type: 'success'
             });
-            this.getParents();
+            this.getStudents();
             this.listLoading = false;
           });
         }).catch(() => {
@@ -339,7 +365,7 @@
       }
     },
     mounted() {//默认页面加截方法
-      this.getParents();
+      this.getStudents();
     }
   }
 

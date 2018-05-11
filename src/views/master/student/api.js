@@ -16,4 +16,4 @@ export const editStudent = params => { return axios.get(`${base}/Student/edit`, 
 
 export const addStudent = params => { return axios.get(`${base}/Student/add`, { params: params }); };
 //取家长列表
-export const getParentList = params => { return axios.get(`${base}/Student/listParents`, { params: params }); };
+export const getSchoolList = params => { return axios.get(`${base}/Student/listSchools`, { params: params }); };

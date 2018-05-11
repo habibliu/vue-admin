@@ -1,15 +1,12 @@
 //import axios from 'axios';
 //import MockAdapter from 'axios-mock-adapter';
-import { Students ,Parents } from './students';
-debugger;
+import { Students,schools } from './students';
 let _Students = Students;
-let _Parents = Parents;
-
+let _Schools = schools;
 const StudentMock = mock => {
 
     //获取学生列表
     mock.onGet('/Student/list').reply(config => {
-      debugger;
       let {name} = config.params;
       let mockStudents = _Students.filter(student => {
         if (name && student.name.indexOf(name) == -1) return false;
@@ -26,7 +23,6 @@ const StudentMock = mock => {
 
     //获取学生列表（分页）
     mock.onGet('/Student/listpage').reply(config => {
-      debugger;
       let {page, name, sex, parent} = config.params;
       let mockStudents = _Students.filter(student => {
         if (name && student.name.indexOf(name) == -1) return false;
@@ -117,22 +113,20 @@ const StudentMock = mock => {
         }, 500);
       });
     });
-
-    //获取家长列表（分页）
-    mock.onGet('/Student/listParents').reply(config => {
+    //获取学校列表
+    mock.onGet('/Student/listSchools').reply(config => {
       debugger;
-      let { name, phone} = config.params;
-      let mockParents = _Parents.filter(parent => {
-        if (name && parent.name.indexOf(name) == -1) return false;
-        if (phone && parent.parent.indexOf(parent) == -1) return false;
+      let {name} = config.params;
+      let mockSchools = _Schools.filter(school => {
+        if (name && school.name.indexOf(name) == -1) return false;
         return true;
       });
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve([200, {
-            parents: mockParents
+            schools: mockSchools
           }]);
-        }, 500);
+        }, 100);
       });
     });
 };

@@ -1,7 +1,6 @@
 //import axios from 'axios';
 //import MockAdapter from 'axios-mock-adapter';
 import { Coaches } from './coaches';
-debugger;
 let _Coaches = Coaches;
 
 
@@ -9,7 +8,6 @@ const CoachMock = mock => {
 
     //获取员工列表
     mock.onGet('/Coach/list').reply(config => {
-      debugger;
       let {name} = config.params;
       let mockCoaches = _Coaches.filter(coach => {
         if (name && coach.name.indexOf(name) == -1) return false;
@@ -26,7 +24,6 @@ const CoachMock = mock => {
 
     //获取员工列表（分页）
     mock.onGet('/Coach/listpage').reply(config => {
-      debugger;
       let {page, name, sex, phone} = config.params;
       let mockCoaches = _Coaches.filter(coach => {
         if (name && coach.name.indexOf(name) == -1) return false;

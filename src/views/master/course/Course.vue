@@ -7,15 +7,24 @@
           <el-input v-model="filters.name" placeholder="课程名称"></el-input>
         </el-form-item>
         <el-form-item label="级别">
-          <el-select v-model="filters.sex" placeholder="请选择">
+          <el-select v-model="filters.grade" placeholder="请选择">
             <el-option label="全部" value=""></el-option>
-            <el-option label="男" value="1"></el-option>
-            <el-option label="女" value="0"></el-option>
+            <el-option label="幼儿班" value="1"></el-option>
+            <el-option label="基础班" value="2"></el-option>
+            <el-option label="提高班" value="3"></el-option>
+            <el-option label="精英班" value="4"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="电话">
-          <el-input v-model="filters.telphone" placeholder="电话"></el-input>
+        <el-form-item label="阶段">
+          <el-select v-model="filters.phase" placeholder="请选择">
+            <el-option label="全部" value=""></el-option>
+            <el-option label="第一阶段" value="1"></el-option>
+            <el-option label="第二阶段" value="2"></el-option>
+            <el-option label="第三阶段" value="3"></el-option>
+            <el-option label="第四阶段" value="4"></el-option>
+          </el-select>
         </el-form-item>
+       
         <el-form-item>
           <el-button type="primary" v-on:click="getCourses">查询</el-button>
         </el-form-item>
@@ -31,15 +40,17 @@
       </el-table-column>
       <el-table-column type="index" width="60">
       </el-table-column>
-      <el-table-column prop="name" label="课程名称" width="120" sortable>
+      <el-table-column prop="name" label="课程名称" width="140" sortable>
       </el-table-column>
-      <el-table-column prop="sex" label="级别" width="80" :formatter="formatSex" sortable>
+      <el-table-column prop="grade" label="级别" width="120" :formatter="formatGrade" sortable>
       </el-table-column>
-      <el-table-column prop="birth" label="生日" width="120" sortable>
+      <el-table-column prop="phase" label="阶段" width="120" :formatter="formatPhase" sortable>
       </el-table-column>
-      <el-table-column prop="telphone" label="电话" width="140" sortable>
+      <el-table-column prop="sections" label="每期节数" width="120" sortable>
       </el-table-column>
-      <el-table-column prop="addr" label="地址" min-width="180" sortable>
+      <el-table-column prop="price" label="每期定价" min-width="120" sortable>
+      </el-table-column>
+      <el-table-column prop="memo" label="备注" min-width="180" sortable>
       </el-table-column>
       <el-table-column label="操作" width="150">
         <template scope="scope">
@@ -63,20 +74,31 @@
           <el-input v-model="editForm.name" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="级别">
-          <el-radio-group v-model="editForm.sex">
-            <el-radio class="radio" :label="1">男</el-radio>
-            <el-radio class="radio" :label="0">女</el-radio>
-          </el-radio-group>
+          <el-select v-model="editForm.grade" placeholder="请选择">
+            <el-option label="全部" value=""></el-option>
+            <el-option label="幼儿班" value="1"></el-option>
+            <el-option label="基础班" value="2"></el-option>
+            <el-option label="提高班" value="3"></el-option>
+            <el-option label="精英班" value="4"></el-option>
+          </el-select>
         </el-form-item>
-       
-        <el-form-item label="生日">
-          <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
+       <el-form-item label="阶段">
+          <el-select v-model="editForm.phase" placeholder="请选择">
+            <el-option label="全部" value=""></el-option>
+            <el-option label="第一阶段" value="1"></el-option>
+            <el-option label="第二阶段" value="2"></el-option>
+            <el-option label="第三阶段" value="3"></el-option>
+            <el-option label="第四阶段" value="4"></el-option>
+          </el-select>
         </el-form-item>
-         <el-form-item label="电话">
-          <el-input v-model="editForm.telphone"></el-input>
+        <el-form-item label="每期节数">
+          <el-input v-model="editForm.sections"></el-input>
         </el-form-item>
-        <el-form-item label="地址">
-          <el-input type="textarea" v-model="editForm.addr"></el-input>
+         <el-form-item label="每期定价">
+          <el-input v-model="editForm.price"></el-input>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input type="textarea" v-model="editForm.memo" rows="4"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -91,20 +113,32 @@
         <el-form-item label="课程名称" prop="name">
           <el-input v-model="addForm.name" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="级别">
-          <el-radio-group v-model="addForm.sex">
-            <el-radio class="radio" :label="1">男</el-radio>
-            <el-radio class="radio" :label="0">女</el-radio>
-          </el-radio-group>
+         <el-form-item label="级别">
+          <el-select v-model="addForm.grade" placeholder="请选择">
+            <el-option label="全部" value=""></el-option>
+            <el-option label="幼儿班" value="1"></el-option>
+            <el-option label="基础班" value="2"></el-option>
+            <el-option label="提高班" value="3"></el-option>
+            <el-option label="精英班" value="4"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="生日">
-          <el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
+       <el-form-item label="阶段">
+          <el-select v-model="addForm.phase" placeholder="请选择">
+            <el-option label="全部" value=""></el-option>
+            <el-option label="第一阶段" value="1"></el-option>
+            <el-option label="第二阶段" value="2"></el-option>
+            <el-option label="第三阶段" value="3"></el-option>
+            <el-option label="第四阶段" value="4"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="电话">
-          <el-input v-model="addForm.telphone" ></el-input>
+        <el-form-item label="每期节数">
+          <el-input   v-model="editForm.sections"></el-input>
         </el-form-item>
-        <el-form-item label="地址">
-          <el-input type="textarea" v-model="addForm.addr"></el-input>
+         <el-form-item label="每期定价">
+          <el-input v-model="editForm.price"></el-input>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input type="textarea" v-model="editForm.memo" rows="4"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -125,8 +159,8 @@
       return {
         filters: {
           name: '',
-          sex: '',
-          telphone: ''
+          grade: '',
+          phase: ''
         },
         courses: [],
         total: 0,
@@ -145,10 +179,11 @@
         editForm: {
           id: 0,
           name: '',
-          sex: -1,
-          telphone: 0,
-          birth: '',
-          addr: '',
+          grade: 0,
+          phase: 0,
+          sections: '',
+          price: '',
+          memo: '',
         },
 
         addFormVisible: false,//新增界面是否显示
@@ -161,18 +196,22 @@
         //新增界面数据
         addForm: {
           name: '',
-          sex: -1,
-          telphone: 0,
-          birth: '',
-          addr: '',
+          grade: 0,
+          phase: 0,
+          sections: '',
+          price: '',
+          memo: '',
         }
 
       }
     },
     methods: {
       //级别显示转换
-      formatSex: function (row, column) {
-        return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
+      formatGrade: function (row, column) {
+        return row.grade['name'];
+      },
+      formatPhase: function (row, column){
+        return row.phase['name'];
       },
       handleCurrentChange(val) {
         this.page = val;

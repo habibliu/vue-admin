@@ -1,4 +1,6 @@
 import babelpolyfill from 'babel-polyfill'
+import fullCalendar from 'vue-fullcalendar'
+
 import Vue from 'vue'
 import App from './App'
 import ElementUI from 'element-ui'
@@ -9,6 +11,8 @@ import store from './vuex/store'
 import Vuex from 'vuex'
 //import NProgress from 'nprogress'
 //import 'nprogress/nprogress.css'
+
+
 import routes from './routes'
 import Mock from './mock'
 Mock.bootstrap();//启动mock
@@ -18,6 +22,7 @@ import 'font-awesome/css/font-awesome.min.css'
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
+Vue.component('full-calendar', fullCalendar)
 
 //NProgress.configure({ showSpinner: false });
 

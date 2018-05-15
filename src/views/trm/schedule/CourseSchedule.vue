@@ -6,9 +6,6 @@
         <el-form-item label="课程名称">
           <el-input v-model="filters.name" placeholder="课程名称"></el-input>
         </el-form-item>
-        <el-form-item label="电话">
-          <el-input v-model="filters.telphone" placeholder="电话"></el-input>
-        </el-form-item>
         <el-form-item>
           <el-button type="primary" v-on:click="getSchedules">查询</el-button>
         </el-form-item>
@@ -70,20 +67,28 @@
     </el-dialog>
 
     <!--新增界面-->
-    <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
+    <el-dialog title="排期" v-model="addFormVisible" :close-on-click-modal="false" >
       <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="addForm.name" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="租赁日期">
-          <el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="电话">
-          <el-input v-model="addForm.telphone" ></el-input>
-        </el-form-item>
-        <el-form-item label="地址">
-          <el-input type="textarea" v-model="addForm.addr"></el-input>
-        </el-form-item>
+        <el-row :gutter="20">
+          <el-col :span="8"><div class="grid-content bg-purple"></div>
+            <el-form-item label="y" prop="name">
+              <el-input v-model="addForm.name" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="租赁日期">
+              <el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="电话">
+              <el-input v-model="addForm.telphone" ></el-input>
+            </el-form-item>
+            <el-form-item label="地址">
+              <el-input type="textarea" v-model="addForm.addr"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="16"><div class="grid-content bg-purple"></div>
+            <full-calendar :events="fcEvents" locale="en"></full-calendar>
+          </el-col>
+        </el-row>
+        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addFormVisible = false">取消</el-button>
@@ -103,8 +108,14 @@
       return {
         filters: {//过滤条件
           name: '',
-          telphone: ''
         },
+        fcEvents :[
+          {
+            title : 'Sunny Out of Office',
+            start : '2016-08-25',
+            end : '2017-07-27'
+          }
+        ],
         schedules: [],
         total: 0,
         page: 1,
@@ -157,13 +168,10 @@
       getSchedules() {
         let para = {
           page: this.page,
-          name: this.filters.name,
-          sex: this.filters.sex,
-          telphone: this.filters.telphone
+          name: this.filters.name
         };
         this.listLoading = true;
         getScheduleListPage(para).then((res) => {
-          debugger;
           if( res && res.data){
             this.total = res.data.total;
             this.schedules = res.data.schedules;
@@ -286,6 +294,10 @@
           this.listLoading = false;
         });
       }
+      
+    },
+    components : {
+      'full-calendar': require('vue-fullcalendar')  
     },
     mounted() {//默认页面加截方法
       this.getSchedules();
@@ -295,5 +307,7 @@
 </script>
 
 <style scoped>
-
+.el-dialog.el-dialog--width-auto{
+  width:auto !important;
+}
 </style>

@@ -1,15 +1,12 @@
 //import axios from 'axios';
 //import MockAdapter from 'axios-mock-adapter';
 import { Courses } from './courses';
-debugger;
 let _Courses = Courses;
-
 
 const CourseMock = mock => {
 
     //获取员工列表
     mock.onGet('/Course/list').reply(config => {
-      debugger;
       let {name} = config.params;
       let mockCourses = _Courses.filter(course => {
         if (name && course.name.indexOf(name) == -1) return false;
@@ -26,7 +23,6 @@ const CourseMock = mock => {
 
     //获取员工列表（分页）
     mock.onGet('/Course/listpage').reply(config => {
-      debugger;
       let {page, name, sex, phone} = config.params;
       let mockCourses = _Courses.filter(course => {
         if (name && course.name.indexOf(name) == -1) return false;

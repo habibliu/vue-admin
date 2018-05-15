@@ -1,7 +1,6 @@
 //import axios from 'axios';
 //import MockAdapter from 'axios-mock-adapter';
 import { Venues } from './venues';
-debugger;
 let _Venues = Venues;
 
 
@@ -9,7 +8,6 @@ const SportVenueMock = mock => {
 
     //获取场地列表
     mock.onGet('/SportVenue/list').reply(config => {
-      debugger;
       let {name} = config.params;
       let mockVenues = _Venues.filter(coach => {
         if (name && coach.name.indexOf(name) == -1) return false;
@@ -26,7 +24,6 @@ const SportVenueMock = mock => {
 
     //获取场地列表（分页）
     mock.onGet('/SportVenue/listpage').reply(config => {
-      debugger;
       let {page, name, phone} = config.params;
       let mockVenues = _Venues.filter(coach => {
         if (name && coach.name.indexOf(name) == -1) return false;

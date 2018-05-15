@@ -16,10 +16,14 @@
     "element-ui": "^1.2.8",
     "escodegen": "^1.9.1",
     "font-awesome": "^4.7.0",
-    "fs": "^0.0.1-security",
+    "fs": "0.0.1-security",
+    "fullcalendar": "^3.9.0",
+    "jquery": "^3.3.1",
     "jsonpath": "^1.0.0",
     "nprogress": "^0.2.0",
+    "static-eval": "^2.0.0",
     "vue": "^2.2.2",
+    "vue-fullcalendar": "^1.0.9",
     "vue-router": "^2.3.0",
     "vuex": "^2.0.0-rc.6"
   },
@@ -74,5 +78,9 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:habibliu/vue-admin.git"
+  }
 }

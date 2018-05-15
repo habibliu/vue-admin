@@ -1,7 +1,6 @@
 //import axios from 'axios';
 //import MockAdapter from 'axios-mock-adapter';
 import { Registrations } from './registrations';
-debugger;
 let _Registrations = Registrations;
 
 
@@ -9,7 +8,6 @@ const CourseRegistrationMock = mock => {
 
     //获取场地列表
     mock.onGet('/CourseRegistration/list').reply(config => {
-      debugger;
       let {name} = config.params;
       let mockVenues = _Registrations.filter(registration => {
         if (name && registration.name.indexOf(name) == -1) return false;
@@ -26,7 +24,6 @@ const CourseRegistrationMock = mock => {
 
     //获取场地列表（分页）
     mock.onGet('/CourseRegistration/listpage').reply(config => {
-      debugger;
       let {page, name, phone} = config.params;
       let mockVenues = _Registrations.filter(registration => {
         if (name && registration.name.indexOf(name) == -1) return false;

@@ -1,7 +1,6 @@
 //import axios from 'axios';
 //import MockAdapter from 'axios-mock-adapter';
 import { Parents } from './parents';
-debugger;
 let _Parents = Parents;
 
 
@@ -9,7 +8,6 @@ const ParentMock = mock => {
 
     //获取员工列表
     mock.onGet('/Parent/list').reply(config => {
-      debugger;
       let {name} = config.params;
       let mockParents = _Parents.filter(parent => {
         if (name && parent.name.indexOf(name) == -1) return false;
@@ -26,7 +24,6 @@ const ParentMock = mock => {
 
     //获取员工列表（分页）
     mock.onGet('/Parent/listpage').reply(config => {
-      debugger;
       let {page, name, sex, phone} = config.params;
       let mockParents = _Parents.filter(parent => {
         if (name && parent.name.indexOf(name) == -1) return false;

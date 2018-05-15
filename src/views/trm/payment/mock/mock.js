@@ -1,7 +1,6 @@
 //import axios from 'axios';
 //import MockAdapter from 'axios-mock-adapter';
 import { Payments } from './payments';
-debugger;
 let _Payments = Payments;
 
 
@@ -9,7 +8,6 @@ const CoursePaymentMock = mock => {
 
     //获取场地列表
     mock.onGet('/CoursePayment/list').reply(config => {
-      debugger;
       let {name} = config.params;
       let mockVenues = _Payments.filter(payment => {
         if (name && payment.name.indexOf(name) == -1) return false;
@@ -26,7 +24,6 @@ const CoursePaymentMock = mock => {
 
     //获取场地列表（分页）
     mock.onGet('/CoursePayment/listpage').reply(config => {
-      debugger;
       let {page, name, phone} = config.params;
       let mockVenues = _Payments.filter(payment => {
         if (name && payment.name.indexOf(name) == -1) return false;

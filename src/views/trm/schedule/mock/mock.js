@@ -1,24 +1,73 @@
 //import axios from 'axios';
 //import MockAdapter from 'axios-mock-adapter';
-import { Schedules } from './schedules';
-let _Schedules = Schedules;
-
+import { Courses,Venues,Coaches ,CourseStudents} from './schedules';
+let _Courses = Courses;
+let _Venues = Venues;
+let _Coaches = Coaches;
+let _CourseStudents = CourseStudents;
 
 const CourseScheduleMock = mock => {
 
-    //获取场地列表
-    mock.onGet('/CourseSchedule/list').reply(config => {
+    //获课程列表
+    mock.onGet('/CourseSchedule/Course/list').reply(config => {
+      debugger;
       let {name} = config.params;
-      let mockVenues = _Schedules.filter(schedule => {
-        if (name && schedule.name.indexOf(name) == -1) return false;
+      let mockCourses = _Courses.filter(course => {
+        if (name && course.name.indexOf(name) == -1) return false;
         return true;
       });
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve([200, {
-            schedules: mockVenues
+            courses: mockCourses
           }]);
-        }, 1000);
+        }, 100);
+      });
+    });
+    //获教练列表
+    mock.onGet('/CourseSchedule/Coach/list').reply(config => {
+      let {name} = config.params;
+      let mockCoaches = _Coaches.filter(coach => {
+        if (name && coach.name.indexOf(name) == -1) return false;
+        return true;
+      });
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            coaches: mockCoaches
+          }]);
+        }, 100);
+      });
+    });
+    //获取场地列表
+    mock.onGet('/CourseSchedule/Venue/list').reply(config => {
+      let {name} = config.params;
+      let mockVenues = _Venues.filter(venue => {
+        if (name && venue.name.indexOf(name) == -1) return false;
+        return true;
+      });
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            venues: mockVenues
+          }]);
+        }, 100);
+      });
+    });
+
+    //获取课程的报名学生
+    mock.onGet('/CourseSchedule/Student/list').reply(config => {
+      let {course} = config.params;
+      let mockStudents = _CourseStudents.filter(student => {
+        if (course && student.course.indexOf(course) == -1) return false;
+        return true;
+      });
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            students: mockStudents
+          }]);
+        }, 100);
       });
     });
 
@@ -41,77 +90,7 @@ const CourseScheduleMock = mock => {
       });
     });
 
-    //删除场地
-    mock.onGet('/CourseSchedule/remove').reply(config => {
-      let { id } = config.params;
-      _Schedules = _Schedules.filter(u => u.id !== id);
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve([200, {
-            code: 200,
-            msg: '删除成功'
-          }]);
-        }, 500);
-      });
-    });
-
-    //批量删除场地
-    mock.onGet('/CourseSchedule/batchremove').reply(config => {
-      let { ids } = config.params;
-      ids = ids.split(',');
-      _Schedules = _Schedules.filter(u => !ids.includes(u.id));
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve([200, {
-            code: 200,
-            msg: '删除成功'
-          }]);
-        }, 500);
-      });
-    });
-
-    //编辑场地
-    mock.onGet('/CourseSchedule/edit').reply(config => {
-      let { id, name, addr, age, birth, sex } = config.params;
-      _Schedules.some(u => {
-        if (u.id === id) {
-          u.name = name;
-          u.addr = addr;
-          u.age = age;
-          u.birth = birth;
-          u.sex = sex;
-          return true;
-        }
-      });
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve([200, {
-            code: 200,
-            msg: '编辑成功'
-          }]);
-        }, 500);
-      });
-    });
-
-    //新增场地
-    mock.onGet('/CourseSchedule/add').reply(config => {
-      let { name, addr, age, birth, sex } = config.params;
-      _Schedules.push({
-        name: name,
-        addr: addr,
-        age: age,
-        birth: birth,
-        sex: sex
-      });
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve([200, {
-            code: 200,
-            msg: '新增成功'
-          }]);
-        }, 500);
-      });
-    });
+    
 };
 //要用这种方式导出;
 export default CourseScheduleMock;

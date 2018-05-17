@@ -115,7 +115,6 @@
   import { getTreeData, removeOrganization, editOrganization, addOrganization } from './api';
   //import  jp from 'jsonpath';
   var jp = require('JSONPath');
-  debugger;
   export default {
    
      watch: {
@@ -142,7 +141,6 @@
       },
       handleNodeClick(data){
        
-        debugger;
         var parentNode=jp(this.treeData,'$..code[?(@.code==data.code)]');
         this.selectedNode=data;
         console.log(this.selectedNode);

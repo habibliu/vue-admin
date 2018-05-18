@@ -10,7 +10,6 @@ const CourseScheduleMock = mock => {
 
     //获课程列表
     mock.onGet('/CourseSchedule/Course/list').reply(config => {
-      
       let {name} = config.params;
       let mockCourses = _Courses.filter(course => {
         if (name && course.name.indexOf(name) == -1) return false;

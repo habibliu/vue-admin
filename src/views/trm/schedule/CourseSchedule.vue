@@ -1,6 +1,5 @@
 <template>
   <section>
-
     <!--新增界面-->
     <el-row :gutter="20">
       <el-col :span="7"><div class="grid-content bg-purple" style="padding-top:20px;"></div>
@@ -140,6 +139,7 @@
     <div class="footer">
       <el-button type="primary" @click.native="addSubmit" :loading="addLoading" >提交</el-button>
     </div>
+
   </section>
 </template>
 
@@ -160,6 +160,7 @@
         students: [],
         listLoading: false,
         sels: [],//列表选中列
+
         addFormVisible: true,//新增界面是否显示
         addLoading: false,
         addFormRules: {
@@ -231,7 +232,6 @@
           console.log(error);
         });
       },
-
       getStudents(){//获取课程报名学员列表
         let para = {
           course:this.addForm.course
@@ -343,9 +343,9 @@
           }else{
             student.beingSchedule++;
           }
-          
         });
       },
+     
       //新增
       addSubmit: function () {
         this.$refs.addForm.validate((valid) => {

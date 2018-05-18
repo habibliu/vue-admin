@@ -4,6 +4,7 @@ import babelpolyfill from 'babel-polyfill'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 //import 'element-ui/lib/theme-default/index.css'
+//import 'element-ui/lib/theme-chalk/index.css'
 //import './assets/theme/theme-green/index.css'
 import VueRouter from 'vue-router'
 import store from './vuex/store'
@@ -15,7 +16,7 @@ import fullCalendar from 'vue-fullcalendar'
 import routes from './routes'
 import Mock from './mock'
 Mock.bootstrap();//启动mock
-//之前是没有屏幕的
+
 import 'font-awesome/css/font-awesome.min.css'
 
 

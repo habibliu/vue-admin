@@ -13,7 +13,12 @@
     "JSONPath": "^0.11.2",
     "axios": "^0.15.3",
     "echarts": "^3.3.2",
+<<<<<<< HEAD
     "element-ui": "^2.3.8",
+=======
+    "element-theme": "^2.0.1",
+    "element-ui": "2.3.8",
+>>>>>>> f3f417d94bfe62dbb6c1bb8bf68a080cc76bba6a
     "escodegen": "^1.9.1",
     "font-awesome": "^4.7.0",
     "fs": "0.0.1-security",

@@ -52,6 +52,7 @@ for (let i = 0; i < 231; i++) {
     course: course['id'],
     sections: course['sections'],
     beingSchedule:course['sections']
+
   }));
 }
 

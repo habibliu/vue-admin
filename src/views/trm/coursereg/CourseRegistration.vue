@@ -24,20 +24,38 @@
       </el-table-column>
       <el-table-column type="index" width="60">
       </el-table-column>
-      <el-table-column prop="name" label="课程名称" width="120" sortable>
+      <el-table-column prop="courseName" label="课程名称" width="180" sortable>
       </el-table-column>
-      <el-table-column prop="birth" label="租赁日期" width="120" sortable>
+       <el-table-column prop="courseGrade" label="课程级别" width="120" :formatter="formatGrade" sortable>
       </el-table-column>
-      <el-table-column prop="telphone" label="电话" width="140" sortable>
+       <el-table-column prop="coursePhase" label="课程阶段" width="120" :formatter="formatPhase" sortable>
       </el-table-column>
-      <el-table-column prop="addr" label="地址" min-width="180" sortable>
+      <el-table-column prop="studentName" label="学员姓名" width="120" sortable>
       </el-table-column>
-      <el-table-column label="操作" width="150">
-        <template scope="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+      <el-table-column prop="studentSex" label="性别" width="100" :formatter="formatSex" sortable>
+      </el-table-column>
+      <el-table-column prop="studentAge" label="年龄" width="100" sortable>
+      </el-table-column>
+      <el-table-column prop="studentSchool" label="在读学校" width="180" sortable>
+      </el-table-column>
+      <el-table-column prop="studentTelephone" label="学员电话" width="140" sortable>
+      </el-table-column>
+      <el-table-column prop="registerDate" label="报名日期" width="120" sortable>
+      </el-table-column>
+      <el-table-column prop="coursePrice" label="学费" width="120" sortable>
+      </el-table-column>
+      <el-table-column prop="payoff" label="是否已缴纳" width="120" :formatter="formatPayoff" sortable>
+      </el-table-column>
+      <el-table-column prop="paymentDate" label="缴费日期" width="120" sortable>
+      </el-table-column>
+      
+      <el-table-column label="操作" width="150" fixed="right">
+        <template slot-scope="scope">
+          <el-button type="text" size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button type="text" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
+
     </el-table>
 
     <!--工具条-->
@@ -48,7 +66,7 @@
     </el-col>
 
     <!--编辑界面-->
-    <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
+    <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
         <el-form-item label="课程名称" prop="name">
           <el-input v-model="editForm.name" auto-complete="off"></el-input>
@@ -70,7 +88,7 @@
     </el-dialog>
 
     <!--新增界面-->
-    <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
+    <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
       <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
         <el-form-item label="姓名" prop="name">
           <el-input v-model="addForm.name" auto-complete="off"></el-input>
@@ -147,7 +165,17 @@
     methods: {
       //性别显示转换
       formatSex: function (row, column) {
-        return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
+        return row.studentSex == 1 ? '男' : row.studentSex == 0 ? '女' : '未知';
+      },
+      formatPayoff: function (row, column) {
+        return row.payoff == 1 ? '已付' : row.payoff == 0 ? '未付' : '未付';
+      },
+      formatGrade: function (row, column) {
+        return row.courseGrade['name'];
+      },
+      formatPhase: function (row, column){
+        debugger;
+        return row.coursePhase['name'];
       },
       handleCurrentChange(val) {
         this.page = val;

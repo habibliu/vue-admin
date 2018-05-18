@@ -1,18 +1,31 @@
 import Mock from 'mockjs';
 
+import { Students } from '../../../master/student/mock/students';
+import { Courses } from '../../../master/course/mock/courses';
+
+
 const Registrations = [];
 
-const venueNames = ['华力','羽俱','堡狮龙','新兴月','仙杜拉','合力','仁龙','保芝林','行守冠','新塘中学','二小','仙村中学','永和中学','三中','毅海','富土康'];
 
-for (let i = 0; i < 16; i++) {
+for (let i = 0; i < 102; i++) {
+  var course=Courses[Mock.Random.integer(0, Courses.length-1)];
+  var student=Students[Mock.Random.integer(0, Students.length-1)];
+  var payoff=Mock.Random.integer(0, 1);
+  var registerDate=Mock.Random.date();
   Registrations.push(Mock.mock({
     id: Mock.Random.guid(),
-    name: venueNames[i],
-    addr: Mock.mock('@county(true)'),
-    'age|8-20': 8,
-    birth: Mock.Random.date(),
-    sex: Mock.Random.integer(0, 1),
-    telphone: Mock.Random.integer(13000000000,13999999999)
+    courseName: course.name,
+    courseGrade: course.grade,
+    coursePhase: course.phase,
+    coursePrice: course.price,
+    payoff:payoff,
+    studentName: student.name,
+    studentSchool: student.school,
+    studentSex: student.sex,
+    studentAge: student.age,
+    studentTelephone: student.telephone,
+    registerDate: Mock.Random.date(),
+    paymentDate: payoff==1?registerDate:''
   }));
 }
 

@@ -17,7 +17,7 @@
           <el-input v-model="filters.parentName" placeholder="家长"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="getParents">查询</el-button>
+          <el-button type="primary" v-on:click="getStudents">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleAdd">新增</el-button>
@@ -65,7 +65,7 @@
     </el-col>
 
     <!--编辑界面-->
-    <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
+    <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
         <el-row :gutter="20">
           <el-col :span="8"><div class="grid-content bg-purple"></div>
@@ -150,7 +150,7 @@
     </el-dialog>
 
     <!--新增界面-->
-    <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
+    <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
       <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">handleCurrentChange
         <el-form-item label="姓名" prop="name">
           <el-input v-model="addForm.name" auto-complete="off"></el-input>

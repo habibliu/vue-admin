@@ -1,247 +1,349 @@
 <template>
   <section>
-    <!--工具条-->
-    <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-      <el-form :inline="true" :model="filters">
-        <el-form-item label="课程名称">
-          <el-input v-model="filters.name" placeholder="课程名称"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" v-on:click="getSchedules">查询</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="handleAdd">新增</el-button>
-        </el-form-item>
-      </el-form>
-    </el-col>
-
-    <!--列表-->
-    <el-table :data="schedules" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
-      <el-table-column type="selection" width="55">
-      </el-table-column>
-      <el-table-column type="index" width="60">
-      </el-table-column>
-      <el-table-column prop="name" label="课程名称" width="120" sortable>
-      </el-table-column>
-      <el-table-column prop="birth" label="租赁日期" width="120" sortable>
-      </el-table-column>
-      <el-table-column prop="telphone" label="电话" width="140" sortable>
-      </el-table-column>
-      <el-table-column prop="addr" label="地址" min-width="180" sortable>
-      </el-table-column>
-      <el-table-column label="操作" width="150">
-        <template scope="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <!--工具条-->
-    <el-col :span="24" class="toolbar">
-      <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
-      <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
-      </el-pagination>
-    </el-col>
-
-    <!--编辑界面-->
-    <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
-      <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="课程名称" prop="name">
-          <el-input v-model="editForm.name" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="租赁日期">
-          <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
-        </el-form-item>
-         <el-form-item label="电话">
-          <el-input v-model="editForm.telphone"></el-input>
-        </el-form-item>
-        <el-form-item label="地址">
-          <el-input type="textarea" v-model="editForm.addr"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="editFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
-      </div>
-    </el-dialog>
 
     <!--新增界面-->
-    <el-dialog title="排期" v-model="addFormVisible" :close-on-click-modal="false" >
-      <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-        <el-row :gutter="20">
-          <el-col :span="8"><div class="grid-content bg-purple"></div>
-            <el-form-item label="y" prop="name">
-              <el-input v-model="addForm.name" auto-complete="off"></el-input>
+    <el-row :gutter="20">
+      <el-col :span="7"><div class="grid-content bg-purple" style="padding-top:20px;"></div>
+        <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm" >
+          <el-form-item label="课程名称" prop="course">
+            <el-select v-model="addForm.course" filterable placeholder="请选择" @change="getStudents">
+              <el-option
+                :remote-method="getCourses"
+                v-for="item in courses"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+                >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="教练" prop="coach">
+            <el-select v-model="addForm.coach" filterable placeholder="请选择">
+              <el-option
+                :remote-method="getCoaches"
+                v-for="item in coaches"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="场地" prop="venue">
+            <el-select v-model="addForm.venue" filterable placeholder="请选择">
+              <el-option
+                :remote-method="getVenues"
+                v-for="item in venues"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="教学日期" prop="date">
+            <el-date-picker type="dates" placeholder="选择一个或多个日期" v-model="addForm.dates"></el-date-picker>
+          </el-form-item>
+        </el-form>
+        <el-table :data="students" highlight-current-row v-loading="listLoading" @selection-change="selsChange" ref="studentTable">
+          <el-table-column type="selection" width="55">
+          </el-table-column>
+          <el-table-column type="index" width="60">
+          </el-table-column>
+          <el-table-column prop="name" label="学员姓名" width="120" sortable>
+          </el-table-column>
+          <el-table-column prop="sections" label="课程节数" width="120" sortable>
+          </el-table-column>
+          <el-table-column prop="beingSchedule" label="待排期" min-width="120" sortable>
+          </el-table-column>
+          
+        </el-table>
+
+      </el-col>
+      <el-col :span="1"><div class="grid-content bg-purple"></div>
+        <div class="button-container">
+          <div class="arrange-button">
+            <el-button type="primary"  @click="appendSchedule" >排期>></el-button>
+          </div>
+          <div class="arrange-button">
+            <el-button type="primary" @click="removeSchedule"><<取消</el-button>
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="16"><div class="grid-content bg-purple"></div>
+        <full-calendar 
+          :events="calendarOptions.events" 
+          lang="zh"
+          :firstDay=1
+          @changeMonth = "changeMonth()"
+          @eventClick = "eventClick($event)"
+          @dayClick = "dayClick()">
+        </full-calendar>
+      </el-col>
+    </el-row>
+
+    <el-dialog title="详情" :visible.sync="detailFormVisible" :close-on-click-modal="false">
+      <el-row :gutter="20">
+        <el-col :span="8"><div class="grid-content bg-purple"></div>
+          <el-form :model="detailForm" label-width="80px"  ref="detailForm">
+            <el-form-item label="教学日期">
+              <el-date-picker type="date"  v-model="detailForm.date" :disabled="true"></el-date-picker>
             </el-form-item>
-            <el-form-item label="租赁日期">
-              <el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
+            <el-form-item label="课程名称" >
+              <el-input v-model="detailForm.courseName" auto-complete="off" :disabled="true"></el-input>
             </el-form-item>
-            <el-form-item label="电话">
-              <el-input v-model="addForm.telphone" ></el-input>
+            <el-form-item label="教练" prop="coach">
+              <el-select v-model="detailForm.coach" filterable placeholder="请选择">
+                <el-option
+                  :remote-method="getCoaches"
+                  v-for="item in coaches"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
             </el-form-item>
-            <el-form-item label="地址">
-              <el-input type="textarea" v-model="addForm.addr"></el-input>
+            <el-form-item label="场地" prop="venue">
+              <el-select v-model="detailForm.venue" filterable placeholder="请选择">
+                <el-option
+                  :remote-method="getVenues"
+                  v-for="item in venues"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
             </el-form-item>
-          </el-col>
-          <el-col :span="16"><div class="grid-content bg-purple"></div>
-            <full-calendar :events="fcEvents" locale="en"></full-calendar>
-          </el-col>
-        </el-row>
-        
-      </el-form>
+          </el-form>
+        </el-col>
+        <el-col :span="16"><div class="grid-content bg-purple"></div>
+          <el-table :data="detailForm.students" highlight-current-row v-loading="listLoading" @selection-change="selsChange" >
+            <el-table-column type="selection" width="55">
+            </el-table-column>
+            <el-table-column type="index" width="60">
+            </el-table-column>
+            <el-table-column prop="name" label="学员姓名" width="120" sortable>
+            </el-table-column>
+            <el-table-column prop="sections" label="课程节数" width="120" sortable>
+            </el-table-column>
+            <el-table-column prop="beingSchedule" label="待排期" min-width="120" sortable>
+            </el-table-column>
+          </el-table>
+        </el-col>
+      </el-row>
+      
       <div slot="footer" class="dialog-footer">
-        <el-button @click.native="addFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
+        <el-button @click.native="detailFormVisible = false">关闭</el-button>
+        <el-button type="primary" @click.native="updateOneDaySchedule" >更新</el-button>
+        <el-button type="danger" @click.native="deleteOneDaySchedule" >删除</el-button>
       </div>
     </el-dialog>
+    
+    <div class="footer">
+      <el-button type="primary" @click.native="addSubmit" :loading="addLoading" >提交</el-button>
+    </div>
   </section>
 </template>
 
 <script>
   import util from '../../../common/js/util'
   //import NProgress from 'nprogress'
-  import { getScheduleListPage, removeSchedule, batchRemoveSchedule, editSchedule, addSchedule } from './api';
+  import { getCourseList, getCoachList, getVenueList,getCourseStudents } from './api';
 
   export default {
     data() {
       return {
-        filters: {//过滤条件
-          name: '',
+        calendarOptions: {
+          events :[]
         },
-        fcEvents :[
-          {
-            title : 'Sunny Out of Office',
-            start : '2016-08-25',
-            end : '2017-07-27'
-          }
-        ],
-        schedules: [],
-        total: 0,
-        page: 1,
+        courses: [],
+        coaches: [],
+        venues: [],
+        students: [],
         listLoading: false,
         sels: [],//列表选中列
-
-        editFormVisible: false,//编辑界面是否显示
-        editLoading: false,
-        editFormRules: {
-          name: [
-            { required: true, message: '请输入课程名称', trigger: 'blur' }
-          ]
-        },
-        //编辑界面数据
-        editForm: {
-          id: 0,
-          name: '',
-          telphone: 0,
-          birth: '',
-          addr: '',
-        },
-
-        addFormVisible: false,//新增界面是否显示
+        addFormVisible: true,//新增界面是否显示
         addLoading: false,
         addFormRules: {
-          name: [
-            { required: true, message: '请输入课程名称', trigger: 'blur' }
+          course: [
+            { required: true, message: '请选择课程名称', trigger: 'blur' }
+          ],
+          coach: [
+            { required: true, message: '请选择教练', trigger: 'blur' }
+          ],
+          venue: [
+            { required: true, message: '请选择场地', trigger: 'blur' }
           ]
+          
         },
         //新增界面数据
         addForm: {
-          name: '',
-          telphone: 0,
-          birth: '',
-          addr: '',
+          course: '',
+          coach: '',
+          venue: '',
+          dates: [],
+        },
+        detailFormVisible: false,
+        detailForm:{
+          courseId: '',
+          courseName: '',
+          coach: '',
+          venue: '',
+          date: '',
+          students: []
         }
-
       }
     },
     methods: {
-      //性别显示转换
-      formatSex: function (row, column) {
-        return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
-      },
       handleCurrentChange(val) {
         this.page = val;
         this.getSchedules();
       },
-      //获取场地列表
-      getSchedules() {
+      getCourses(){//获取课程列表
         let para = {
-          page: this.page,
-          name: this.filters.name
+          name: '2018',
         };
-        this.listLoading = true;
-        getScheduleListPage(para).then((res) => {
+        getCourseList(para).then((res) => {
           if( res && res.data){
-            this.total = res.data.total;
-            this.schedules = res.data.schedules;
-          
+            this.courses = res.data.courses;
           }
-          this.listLoading = false;
         }).catch((error) => {
-          this.listLoading = false;
           console.log(error);
         });
       },
-      //删除
-      handleDel: function (index, row) {
-        this.$confirm('确认删除该记录吗?', '提示', {
-          type: 'warning'
-        }).then(() => {
-          this.listLoading = true;
-          //NProgress.start();
-          let para = { id: row.id };
-          removeSchedule(para).then((res) => {
-            this.listLoading = false;
-            //NProgress.done();
-            this.$message({
-              message: '删除成功',
-              type: 'success'
-            });
-            this.getSchedules();
-          });
-        }).catch(() => {
-          this.listLoading = false;
+      getCoaches(){//获取教练列表
+        let para = {
+        };
+        getCoachList(para).then((res) => {
+          if( res && res.data){
+            this.coaches = res.data.coaches;
+          }
+        }).catch((error) => {
+          console.log(error);
         });
       },
-      //显示编辑界面
-      handleEdit: function (index, row) {
-        this.editFormVisible = true;
-        this.editForm = Object.assign({}, row);
-      },
-      //显示新增界面
-      handleAdd: function () {
-        this.addFormVisible = true;
-        this.addForm = {
-          name: '',
-          sex: -1,
-          telphone: 0,
-          birth: '',
-          addr: ''
+      getVenues(){//获取场地列表
+        let para = {
         };
-      },
-      //编辑
-      editSubmit: function () {
-        this.$refs.editForm.validate((valid) => {
-          if (valid) {
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
-              this.editLoading = true;
-              //NProgress.start();
-              let para = Object.assign({}, this.editForm);
-              para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-              editSchedule(para).then((res) => {
-                this.editLoading = false;
-                //NProgress.done();
-                this.$message({
-                  message: '提交成功',
-                  type: 'success'
-                });
-                this.$refs['editForm'].resetFields();
-                this.editFormVisible = false;
-                this.getSchedules();
-              });
-            });
+        getVenueList(para).then((res) => {
+          if( res && res.data){
+            this.venues = res.data.venues;
           }
+        }).catch((error) => {
+          console.log(error);
+        });
+      },
+
+      getStudents(){//获取课程报名学员列表
+        let para = {
+          course:this.addForm.course
+        };
+
+        getCourseStudents(para).then((res) => {
+          if( res && res.data){
+            this.students = res.data.students;
+            setTimeout(() => {
+              this.students.forEach(item => {
+                this.$refs.studentTable.toggleRowSelection(item,true);
+              });
+            }, 100);
+          }
+        }).catch((error) => {
+          console.log(error);
+        });
+      },
+      appendSchedule(){//追加排班
+        for(let i=0;i<this.addForm.dates.length;i++){
+          let event={
+            title:this.getCouserName(this.addForm.course),
+            start:this.addForm.dates[i],
+            end:this.addForm.dates[i],
+            cssClass : ['home', 'work']
+          };
+          let DATA ={
+            courseId:this.addForm.course,
+            courseName:this.getCouserName(this.addForm.course),
+            date : util.formatDate.format(this.addForm.dates[i],'yyyy-MM-dd'),
+            venueId: this.addForm.venue,
+            venueName: this.getVenueName(this.addForm.venue),
+            coachId: this.addForm.coach,
+            coachName: this.getCoachName(this.addForm.coach),
+            students: this.sels
+          };
+          event.DATA=DATA;
+          this.calendarOptions.events.push(event);
+          this.changeStudentSections(this.sels,true);
+        }
+
+      },
+      removeSchedule(){//移除排班
+        for(let i=0;i<this.addForm.dates.length;i++){
+          var deletingDate=util.formatDate.format(this.addForm.dates[i],'yyyy-MM-dd');
+          for(let j=0;j<this.calendarOptions.events.length;j++){
+            var event=this.calendarOptions.events[j];
+            var currentDate=util.formatDate.format(event.start,'yyyy-MM-dd');
+            if(currentDate==deletingDate){
+              if (event.DATA.courseId==this.addForm.course){
+                debugger;
+                var event=this.calendarOptions.events.splice(j,1);
+                this.changeStudentSections(event.DATA.students,false);
+              }
+            }
+          }
+        }
+      },
+      deleteOneDaySchedule (){
+
+      },
+      updateOneDaySchedule (){
+
+      },
+      changeMonth: function(start, end, current){//日历月分变更事件
+          
+      },
+      dayClick: function(day, jsEvent){
+
+      },
+      eventClick: function(event){
+        debugger;
+        this.detailFormVisible = true;
+        this.detailForm.courseId=event.DATA.courseId;
+        this.detailForm.courseName=event.DATA.courseName;
+        this.detailForm.coach=event.DATA.coachId;
+        this.detailForm.venue=event.DATA.venueId;
+        this.detailForm.date=event.DATA.date;
+        this.detailForm.students=event.DATA.students;
+        console.log(event);
+
+      },
+      getCouserName: function(id) {
+        for(var i=0;i<this.courses.length; i++){
+          if ( this.courses[i].id==id){
+            return this.courses[i].name;
+          }
+        }
+      },
+      getCoachName: function(id) {
+        for(var i=0;i<this.coaches.length; i++){
+          if ( this.coaches[i].id==id){
+            return this.coaches[i].name;
+          }
+        }
+      },
+      getVenueName: function(id) {
+        for(var i=0;i<this.venues.length; i++){
+          if ( this.venues[i].id==id){
+            return this.venues[i].name;
+          }
+        }
+      },
+      changeStudentSections:function(students, deduce){
+        students.forEach(student =>{
+          console.log(student);
+          if(deduce){
+            student.beingSchedule--;
+          }else{
+            student.beingSchedule++;
+          }
+          
         });
       },
       //新增
@@ -270,44 +372,31 @@
       },
       selsChange: function (sels) {
         this.sels = sels;
-      },
-      //批量删除
-      batchRemove: function () {
-        var ids = this.sels.map(item => item.id).toString();
-        this.$confirm('确认删除选中记录吗？', '提示', {
-          type: 'warning'
-        }).then(() => {
-          this.listLoading = true;
-          //NProgress.start();
-          let para = { ids: ids };
-          batchRemoveSchedule(para).then((res) => {
-            
-            //NProgress.done();
-            this.$message({
-              message: '删除成功',
-              type: 'success'
-            });
-            this.getSchedules();
-            this.listLoading = false;
-          });
-        }).catch(() => {
-          this.listLoading = false;
-        });
       }
-      
     },
     components : {
       'full-calendar': require('vue-fullcalendar')  
     },
     mounted() {//默认页面加截方法
-      this.getSchedules();
+      this.getCourses();
+      this.getCoaches();
+      this.getVenues();
     }
   }
 
 </script>
 
 <style scoped>
-.el-dialog.el-dialog--width-auto{
-  width:auto !important;
+.button-container{
+  padding-top: 300px;  
+  display: block;  
+}
+.arrange-button{
+  padding-top:10px;
+  padding-left:20px;
+}
+.footer{
+  display: table-cell;  
+  vertical-align: middle; 
 }
 </style>

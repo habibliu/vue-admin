@@ -21,30 +21,30 @@ const schools = [
   {id:'014', name:'新塘中学'},
   {id:'015', name:'新塘二中'},
   {id:'016', name:'新塘三中'}];
-
-for (let i = 0; i < 150; i++) {
-  var birthDate=Mock.Random.date();
-  var borthYear=parseInt(birthDate.substring(0,5));
-  var age = currentDate.getFullYear()-borthYear;
-  if (age < 5) {
-    continue;
-  } 
-  var parentTelephone=Mock.Random.integer(13000000000,13999999999);
-  Students.push(Mock.mock({
-    id: Mock.Random.guid(),
-    name: Mock.Random.cname(),
-    addr: Mock.mock('@county(true)'),
-    birth: birthDate,
-    height: Mock.Random.integer(120,170),
-    age:age,
-    school: schools[Mock.Random.integer(0,schools.length-1)].name,
-    sex: Mock.Random.integer(0, 1),
-    telephone:Mock.Random.integer(13000000000,13999999999),
-    parentName: Mock.Random.cname(),
-    parentSex: Mock.Random.integer(0, 1),
-    parentTelephone: parentTelephone,
-    parentWx: parentTelephone,
-  }));
+if (Students.length==0){
+  for (let i = 0; i < 150; i++) {
+    var birthDate=Mock.Random.date();
+    var borthYear=parseInt(birthDate.substring(0,5));
+    var age = currentDate.getFullYear()-borthYear;
+    if (age < 5) {
+      continue;
+    } 
+    var parentTelephone=Mock.Random.integer(13000000000,13999999999);
+    Students.push(Mock.mock({
+      id: Mock.Random.guid(),
+      name: Mock.Random.cname(),
+      addr: Mock.mock('@county(true)'),
+      birth: birthDate,
+      height: Mock.Random.integer(120,170),
+      age:age,
+      school: schools[Mock.Random.integer(0,schools.length-1)].name,
+      sex: Mock.Random.integer(0, 1),
+      telephone:Mock.Random.integer(13000000000,13999999999),
+      parentName: Mock.Random.cname(),
+      parentSex: Mock.Random.integer(0, 1),
+      parentTelephone: parentTelephone,
+      parentWx: parentTelephone,
+    }));
+  }
 }
-
 export { Students,schools};

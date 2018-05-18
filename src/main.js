@@ -1,27 +1,27 @@
-import babelpolyfill from 'babel-polyfill'
-import fullCalendar from 'vue-fullcalendar'
-
 import Vue from 'vue'
 import App from './App'
+import babelpolyfill from 'babel-polyfill'
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-default/index.css'
+import 'element-ui/lib/theme-chalk/index.css'
+//import 'element-ui/lib/theme-default/index.css'
 //import './assets/theme/theme-green/index.css'
 import VueRouter from 'vue-router'
 import store from './vuex/store'
 import Vuex from 'vuex'
 //import NProgress from 'nprogress'
 //import 'nprogress/nprogress.css'
-
+import fullCalendar from 'vue-fullcalendar'
 
 import routes from './routes'
 import Mock from './mock'
 Mock.bootstrap();//启动mock
-
+//之前是没有屏幕的
 import 'font-awesome/css/font-awesome.min.css'
 
-Vue.use(ElementUI)
+
 Vue.use(VueRouter)
 Vue.use(Vuex)
+Vue.use(ElementUI)
 Vue.component('full-calendar', fullCalendar)
 
 //NProgress.configure({ showSpinner: false });

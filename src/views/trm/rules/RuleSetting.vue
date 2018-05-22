@@ -3,30 +3,21 @@
     <!--工具条-->
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
-        <el-form-item label="课程名称">
-          <el-input v-model="filters.name" placeholder="课程名称"></el-input>
+        <el-form-item label="姓名">
+          <el-input v-model="filters.name" placeholder="姓名"></el-input>
         </el-form-item>
-        <el-form-item label="级别">
-          <el-select v-model="filters.grade" placeholder="请选择">
+        <el-form-item label="性别">
+          <el-select v-model="filters.sex" placeholder="请选择">
             <el-option label="全部" value=""></el-option>
-            <el-option label="幼儿班" value="1"></el-option>
-            <el-option label="基础班" value="2"></el-option>
-            <el-option label="提高班" value="3"></el-option>
-            <el-option label="精英班" value="4"></el-option>
+            <el-option label="男" value="1"></el-option>
+            <el-option label="女" value="0"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="阶段">
-          <el-select v-model="filters.phase" placeholder="请选择">
-            <el-option label="全部" value=""></el-option>
-            <el-option label="第一阶段" value="1"></el-option>
-            <el-option label="第二阶段" value="2"></el-option>
-            <el-option label="第三阶段" value="3"></el-option>
-            <el-option label="第四阶段" value="4"></el-option>
-          </el-select>
+        <el-form-item label="电话">
+          <el-input v-model="filters.telphone" placeholder="电话"></el-input>
         </el-form-item>
-       
         <el-form-item>
-          <el-button type="primary" v-on:click="getCourses">查询</el-button>
+          <el-button type="primary" v-on:click="getRules">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleAdd">新增</el-button>
@@ -35,24 +26,20 @@
     </el-col>
 
     <!--列表-->
-    <el-table :data="courses" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
+    <el-table :data="coaches" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
       <el-table-column type="selection" width="55">
       </el-table-column>
       <el-table-column type="index" width="60">
       </el-table-column>
-      <el-table-column prop="name" label="课程名称" width="140" sortable>
+      <el-table-column prop="name" label="姓名" width="120" sortable>
       </el-table-column>
-      <el-table-column prop="grade" label="级别" width="120" :formatter="formatGrade" sortable>
+      <el-table-column prop="sex" label="性别" width="80" :formatter="formatSex" sortable>
       </el-table-column>
-      <el-table-column prop="phase" label="阶段" width="120" :formatter="formatPhase" sortable>
+      <el-table-column prop="birth" label="生日" width="120" sortable>
       </el-table-column>
-      <el-table-column prop="ageSection" label="适合年龄段" width="140" :formatter="formatAgeSection" >
+      <el-table-column prop="telphone" label="电话" width="140" sortable>
       </el-table-column>
-      <el-table-column prop="sections" label="每期节数" width="120" sortable>
-      </el-table-column>
-      <el-table-column prop="price" label="每期定价" min-width="120" sortable>
-      </el-table-column>
-      <el-table-column prop="memo" label="备注" min-width="180" sortable>
+      <el-table-column prop="addr" label="地址" min-width="180" sortable>
       </el-table-column>
       <el-table-column label="操作" width="150">
         <template scope="scope">
@@ -72,39 +59,24 @@
     <!--编辑界面-->
     <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="课程名称" prop="name">
+        <el-form-item label="姓名" prop="name">
           <el-input v-model="editForm.name" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="级别">
-          <el-select v-model="editForm.grade" placeholder="请选择">
-            <el-option label="全部" value=""></el-option>
-            <el-option label="幼儿班" value="1"></el-option>
-            <el-option label="基础班" value="2"></el-option>
-            <el-option label="提高班" value="3"></el-option>
-            <el-option label="精英班" value="4"></el-option>
-          </el-select>
+        <el-form-item label="性别">
+          <el-radio-group v-model="editForm.sex">
+            <el-radio class="radio" :label="1">男</el-radio>
+            <el-radio class="radio" :label="0">女</el-radio>
+          </el-radio-group>
         </el-form-item>
-       <el-form-item label="阶段">
-          <el-select v-model="editForm.phase" placeholder="请选择">
-            <el-option label="全部" value=""></el-option>
-            <el-option label="第一阶段" value="1"></el-option>
-            <el-option label="第二阶段" value="2"></el-option>
-            <el-option label="第三阶段" value="3"></el-option>
-            <el-option label="第四阶段" value="4"></el-option>
-          </el-select>
+       
+        <el-form-item label="生日">
+          <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
         </el-form-item>
-        <el-form-item label="适合年龄">
-          <el-input-number v-model="editForm.ageStart" size="small"></el-input-number>至
-          <el-input-number v-model="editForm.ageEnd" size="small"></el-input-number>
+         <el-form-item label="电话">
+          <el-input v-model="editForm.telphone"></el-input>
         </el-form-item>
-        <el-form-item label="每期节数">
-          <el-input v-model="editForm.sections"></el-input>
-        </el-form-item>
-         <el-form-item label="每期定价">
-          <el-input v-model="editForm.price"></el-input>
-        </el-form-item>
-        <el-form-item label="备注">
-          <el-input type="textarea" v-model="editForm.memo" rows="4"></el-input>
+        <el-form-item label="地址">
+          <el-input type="textarea" v-model="editForm.addr"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -116,39 +88,23 @@
     <!--新增界面-->
     <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
       <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-        <el-form-item label="课程名称" prop="name">
+        <el-form-item label="姓名" prop="name">
           <el-input v-model="addForm.name" auto-complete="off"></el-input>
         </el-form-item>
-         <el-form-item label="级别">
-          <el-select v-model="addForm.grade" placeholder="请选择">
-            <el-option label="全部" value=""></el-option>
-            <el-option label="幼儿班" value="1"></el-option>
-            <el-option label="基础班" value="2"></el-option>
-            <el-option label="提高班" value="3"></el-option>
-            <el-option label="精英班" value="4"></el-option>
-          </el-select>
+        <el-form-item label="性别">
+          <el-radio-group v-model="addForm.sex">
+            <el-radio class="radio" :label="1">男</el-radio>
+            <el-radio class="radio" :label="0">女</el-radio>
+          </el-radio-group>
         </el-form-item>
-       <el-form-item label="阶段">
-          <el-select v-model="addForm.phase" placeholder="请选择">
-            <el-option label="全部" value=""></el-option>
-            <el-option label="第一阶段" value="1"></el-option>
-            <el-option label="第二阶段" value="2"></el-option>
-            <el-option label="第三阶段" value="3"></el-option>
-            <el-option label="第四阶段" value="4"></el-option>
-          </el-select>
+        <el-form-item label="生日">
+          <el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
         </el-form-item>
-        <el-form-item label="适合年龄">
-          <el-input-number v-model="addForm.ageStart" size="small"></el-input-number>至
-          <el-input-number v-model="addForm.ageEnd" size="small"></el-input-number>
+        <el-form-item label="电话">
+          <el-input v-model="addForm.telphone" ></el-input>
         </el-form-item>
-        <el-form-item label="每期节数">
-          <el-input   v-model="editForm.sections"></el-input>
-        </el-form-item>
-         <el-form-item label="每期定价">
-          <el-input v-model="editForm.price"></el-input>
-        </el-form-item>
-        <el-form-item label="备注">
-          <el-input type="textarea" v-model="editForm.memo" rows="4"></el-input>
+        <el-form-item label="地址">
+          <el-input type="textarea" v-model="addForm.addr"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -162,17 +118,17 @@
 <script>
   import util from '../../../common/js/util'
   //import NProgress from 'nprogress'
-  import { getCourseListPage, removeCourse, batchRemoveCourse, editCourse, addCourse } from './api';
+  import { getRuleListPage, removeRule, batchRemoveRule, editRule, addRule } from './api';
 
   export default {
     data() {
       return {
         filters: {
           name: '',
-          grade: '',
-          phase: ''
+          sex: '',
+          telphone: ''
         },
-        courses: [],
+        coaches: [],
         total: 0,
         page: 1,
         listLoading: false,
@@ -182,60 +138,48 @@
         editLoading: false,
         editFormRules: {
           name: [
-            { required: true, message: '请输入课程名称', trigger: 'blur' }
+            { required: true, message: '请输入姓名', trigger: 'blur' }
           ]
         },
         //编辑界面数据
         editForm: {
           id: 0,
           name: '',
-          grade: 0,
-          phase: 0,
-          sections: '',
-          price: '',
-          ageStart: '',
-          ageEnd: '',
-          memo: '',
+          sex: -1,
+          telphone: 0,
+          birth: '',
+          addr: '',
         },
 
         addFormVisible: false,//新增界面是否显示
         addLoading: false,
         addFormRules: {
           name: [
-            { required: true, message: '请输入课程名称', trigger: 'blur' }
+            { required: true, message: '请输入姓名', trigger: 'blur' }
           ]
         },
         //新增界面数据
         addForm: {
           name: '',
-          grade: 0,
-          phase: 0,
-          sections: '',
-          price: '',
-          ageStart: '',
-          ageEnd: '',
-          memo: '',
+          sex: -1,
+          telphone: 0,
+          birth: '',
+          addr: '',
         }
 
       }
     },
     methods: {
-      //级别显示转换
-      formatGrade: function (row, column) {
-        return row.grade['name'];
-      },
-      formatPhase: function (row, column){
-        return row.phase['name'];
-      },
-      formatAgeSection: function (row, column){
-        return row.grade['ageStart']+' - ' + row.grade['ageEnd'];
+      //性别显示转换
+      formatSex: function (row, column) {
+        return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
       },
       handleCurrentChange(val) {
         this.page = val;
-        this.getCourses();
+        this.getRules();
       },
       //获取家长列表
-      getCourses() {
+      getRules() {
         let para = {
           page: this.page,
           name: this.filters.name,
@@ -243,10 +187,11 @@
           telphone: this.filters.telphone
         };
         this.listLoading = true;
-        getCourseListPage(para).then((res) => {
+        getRuleListPage(para).then((res) => {
+          debugger;
           if( res && res.data){
             this.total = res.data.total;
-            this.courses = res.data.courses;
+            this.coaches = res.data.coaches;
           
           }
           this.listLoading = false;
@@ -263,14 +208,14 @@
           this.listLoading = true;
           //NProgress.start();
           let para = { id: row.id };
-          removeCourse(para).then((res) => {
+          removeRule(para).then((res) => {
             this.listLoading = false;
             //NProgress.done();
             this.$message({
               message: '删除成功',
               type: 'success'
             });
-            this.getCourses();
+            this.getRules();
           });
         }).catch(() => {
           this.listLoading = false;
@@ -280,8 +225,6 @@
       handleEdit: function (index, row) {
         this.editFormVisible = true;
         this.editForm = Object.assign({}, row);
-        this.editForm.ageStart=row.grade.ageStart;
-        this.editForm.ageEnd=row.grade.ageEnd;
       },
       //显示新增界面
       handleAdd: function () {
@@ -303,7 +246,7 @@
               //NProgress.start();
               let para = Object.assign({}, this.editForm);
               para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-              editCourse(para).then((res) => {
+              editRule(para).then((res) => {
                 this.editLoading = false;
                 //NProgress.done();
                 this.$message({
@@ -312,7 +255,7 @@
                 });
                 this.$refs['editForm'].resetFields();
                 this.editFormVisible = false;
-                this.getCourses();
+                this.getRules();
               });
             });
           }
@@ -327,7 +270,7 @@
               //NProgress.start();
               let para = Object.assign({}, this.addForm);
               para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
-              addCourse(para).then((res) => {
+              addRule(para).then((res) => {
                 this.addLoading = false;
                 //NProgress.done();
                 this.$message({
@@ -336,7 +279,7 @@
                 });
                 this.$refs['addForm'].resetFields();
                 this.addFormVisible = false;
-                this.getCourses();
+                this.getRules();
               });
             });
           }
@@ -354,14 +297,14 @@
           this.listLoading = true;
           //NProgress.start();
           let para = { ids: ids };
-          batchRemoveCourse(para).then((res) => {
+          batchRemoveRule(para).then((res) => {
             
             //NProgress.done();
             this.$message({
               message: '删除成功',
               type: 'success'
             });
-            this.getCourses();
+            this.getRules();
             this.listLoading = false;
           });
         }).catch(() => {
@@ -370,7 +313,7 @@
       }
     },
     mounted() {//默认页面加截方法
-      this.getCourses();
+      this.getRules();
     }
   }
 

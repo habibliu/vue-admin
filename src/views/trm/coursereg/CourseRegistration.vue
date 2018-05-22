@@ -24,12 +24,6 @@
       </el-table-column>
       <el-table-column type="index" width="60">
       </el-table-column>
-      <el-table-column prop="courseName" label="课程名称" width="180" sortable>
-      </el-table-column>
-       <el-table-column prop="courseGrade" label="课程级别" width="120" :formatter="formatGrade" sortable>
-      </el-table-column>
-       <el-table-column prop="coursePhase" label="课程阶段" width="120" :formatter="formatPhase" sortable>
-      </el-table-column>
       <el-table-column prop="studentName" label="学员姓名" width="120" sortable>
       </el-table-column>
       <el-table-column prop="studentSex" label="性别" width="100" :formatter="formatSex" sortable>
@@ -41,6 +35,12 @@
       <el-table-column prop="studentTelephone" label="学员电话" width="140" sortable>
       </el-table-column>
       <el-table-column prop="registerDate" label="报名日期" width="120" sortable>
+      </el-table-column>
+      <el-table-column prop="courseName" label="课程名称" width="180" sortable>
+      </el-table-column>
+       <el-table-column prop="courseGrade" label="课程级别" width="120" :formatter="formatGrade" sortable>
+      </el-table-column>
+       <el-table-column prop="coursePhase" label="课程阶段" width="120" :formatter="formatPhase" sortable>
       </el-table-column>
       <el-table-column prop="coursePrice" label="学费" width="120" sortable>
       </el-table-column>
@@ -66,19 +66,118 @@
     </el-col>
 
     <!--编辑界面-->
-    <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
+    <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false" width="80%">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="课程名称" prop="name">
-          <el-input v-model="editForm.name" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="租赁日期">
-          <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
-        </el-form-item>
-         <el-form-item label="电话">
-          <el-input v-model="editForm.telphone"></el-input>
-        </el-form-item>
-        <el-form-item label="地址">
-          <el-input type="textarea" v-model="editForm.addr"></el-input>
+        <el-row :gutter="20">
+          <el-col :span="6"><div class="grid-content bg-purple"></div>
+            <el-form-item label="学员姓名" prop="name">
+              <el-input v-model="editForm.name" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="性别">
+              <el-radio-group v-model="editForm.sex">
+                <el-radio class="radio" :label="1">男</el-radio>
+                <el-radio class="radio" :label="0">女</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="手机号" prop="parentTelephone">
+              <el-input v-model="editForm.telephone" placeholder="学员手机号码"></el-input>
+            </el-form-item>
+            <el-form-item label="生日">
+              <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="年龄">
+              <el-input-number v-model="editForm.age" :disabled=true></el-input-number>
+            </el-form-item>
+            <el-form-item label="身高">
+              <el-input-number v-model="editForm.height" ></el-input-number>
+            </el-form-item>
+            <el-form-item label="就读学校">
+              <el-select v-model="editForm.school" filterable placeholder="请选择">
+                <el-option
+                  :remote-method="getSchools"
+                  :loading="loading"
+                  v-for="item in schools"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            
+          </el-col>
+          <el-col :span="6"><div class="grid-content bg-purple"></div>
+            <el-form-item label="家长姓名" prop="parentName">
+              <el-input v-model="editForm.parentName" filterable placeholder="请输入家姓名" ></el-input>
+            </el-form-item>
+            <el-form-item label="性别">
+              <el-radio-group v-model="editForm.parentSex">
+                <el-radio class="radio" :label="1">男</el-radio>
+                <el-radio class="radio" :label="0">女</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="手机号" prop="parentTelephone">
+              <el-input v-model="editForm.parentTelephone" placeholder="家长手机号码"></el-input>
+            </el-form-item>
+            <el-form-item label="微信号">
+              <el-input v-model="editForm.parentWx" placeholder="家长微信号码"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6"><div class="grid-content bg-purple"></div>
+            <el-form-item label="课程名称" prop="name">
+              <el-input v-model="editForm.name" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="级别">
+              <el-select v-model="editForm.grade" placeholder="请选择" :disabled=true>
+                <el-option label="全部" value=""></el-option>
+                <el-option label="幼儿班" value="1"></el-option>
+                <el-option label="基础班" value="2"></el-option>
+                <el-option label="提高班" value="3"></el-option>
+                <el-option label="精英班" value="4"></el-option>
+              </el-select>
+            </el-form-item>
+           <el-form-item label="阶段">
+              <el-select v-model="editForm.phase" placeholder="请选择" :disabled=true>
+                <el-option label="全部" value=""></el-option>
+                <el-option label="第一阶段" value="1"></el-option>
+                <el-option label="第二阶段" value="2"></el-option>
+                <el-option label="第三阶段" value="3"></el-option>
+                <el-option label="第四阶段" value="4"></el-option>
+              </el-select>
+            </el-form-item>
+           
+             <el-form-item label="每期定价" >
+              <el-input v-model="editForm.price" :disabled=true></el-input>
+            </el-form-item>
+            <el-form-item label="每期节数" >
+              <el-input v-model="editForm.sections" :disabled=true></el-input>
+            </el-form-item>
+            <el-form-item label="报名期数" >
+              <el-input-number v-model="editForm.sections" :min=1 size="small"></el-input-number>
+            </el-form-item>
+            <el-form-item label="赠送节数">
+              <template slot-scope="scope">
+                <el-input-number v-model="editForm.git"   size="small"></el-input-number>
+                <el-checkbox v-model="checked">自动</el-checkbox>
+              </template>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6"><div class="grid-content bg-purple"></div>
+            <el-form-item label="总金额" >
+              <el-input v-model="editForm.totalAmout" :disabled=true></el-input>
+            </el-form-item>
+            <el-form-item label="总节数" >
+              <el-input v-model="editForm.sections" :disabled=true></el-input>
+            </el-form-item>
+            <el-form-item label="学费已缴" >
+              <el-checkbox v-model="checked"></el-checkbox>
+            </el-form-item>
+            <el-form-item label="缴费日期" >
+              <el-date-picker v-model="editForm.paymentDate" type="date"></el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="备注">
+          <el-input type="textarea" v-model="editForm.memo" rows="3"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

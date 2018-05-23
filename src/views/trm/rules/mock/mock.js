@@ -4,31 +4,30 @@ import { Rules } from './rules';
 let _Rules = Rules;
 
 
-const CoachMock = mock => {
+const RuleMock = mock => {
 
     //获取赠送规则列表
-    mock.onGet('/Coach/list').reply(config => {
-      let {name} = config.params;
-      let mockRules = _Rules.filter(coach => {
-        if (name && coach.name.indexOf(name) == -1) return false;
+    mock.onGet('/RuleSetting/list').reply(config => {
+      let {courseName} = config.params;
+      let mockRules = _Rules.filter(rule => {
+        if (courseName && rule.courseName.indexOf(courseName) == -1) return false;
         return true;
       });
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve([200, {
-            coaches: mockRules
+            rules: mockRules
           }]);
         }, 1000);
       });
     });
 
     //获取赠送规则列表（分页）
-    mock.onGet('/Coach/listpage').reply(config => {
-      let {page, name, sex, phone} = config.params;
-      let mockRules = _Rules.filter(coach => {
-        if (name && coach.name.indexOf(name) == -1) return false;
-        if (sex && coach.sex != sex) return false;
-        if (phone && coach.phone.indexOf(phone) == -1) return false;
+    mock.onGet('/RuleSetting/listpage').reply(config => {
+      let {page, courseName} = config.params;
+      let mockRules = _Rules.filter(rule => {
+        if (courseName && rule.courseName.indexOf(courseName) == -1) return false;
+      
         return true;
       });
       let total = mockRules.length;
@@ -37,14 +36,14 @@ const CoachMock = mock => {
         setTimeout(() => {
           resolve([200, {
             total: total,
-            coaches: mockRules
+            rules: mockRules
           }]);
         }, 1000);
       });
     });
 
     //删除赠送规则
-    mock.onGet('/Coach/remove').reply(config => {
+    mock.onGet('/RuleSetting/remove').reply(config => {
       let { id } = config.params;
       _Rules = _Rules.filter(u => u.id !== id);
       return new Promise((resolve, reject) => {
@@ -58,7 +57,7 @@ const CoachMock = mock => {
     });
 
     //批量删除赠送规则
-    mock.onGet('/Coach/batchremove').reply(config => {
+    mock.onGet('/RuleSetting/batchremove').reply(config => {
       let { ids } = config.params;
       ids = ids.split(',');
       _Rules = _Rules.filter(u => !ids.includes(u.id));
@@ -73,7 +72,7 @@ const CoachMock = mock => {
     });
 
     //编辑赠送规则
-    mock.onGet('/Coach/edit').reply(config => {
+    mock.onGet('/RuleSetting/edit').reply(config => {
       let { id, name, addr, age, birth, sex } = config.params;
       _Rules.some(u => {
         if (u.id === id) {
@@ -96,7 +95,7 @@ const CoachMock = mock => {
     });
 
     //新增赠送规则
-    mock.onGet('/Coach/add').reply(config => {
+    mock.onGet('/RuleSetting/add').reply(config => {
       let { name, addr, age, birth, sex } = config.params;
       _Rules.push({
         name: name,
@@ -116,4 +115,4 @@ const CoachMock = mock => {
     });
 };
 //要用这种方式导出;
-export default CoachMock;
+export default RuleMock;

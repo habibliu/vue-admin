@@ -3,18 +3,8 @@
     <!--工具条-->
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
-        <el-form-item label="姓名">
-          <el-input v-model="filters.name" placeholder="姓名"></el-input>
-        </el-form-item>
-        <el-form-item label="性别">
-          <el-select v-model="filters.sex" placeholder="请选择">
-            <el-option label="全部" value=""></el-option>
-            <el-option label="男" value="1"></el-option>
-            <el-option label="女" value="0"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="电话">
-          <el-input v-model="filters.telphone" placeholder="电话"></el-input>
+        <el-form-item label="课程名称">
+          <el-input v-model="filters.courseName" placeholder="课程名称"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" v-on:click="getRules">查询</el-button>
@@ -26,20 +16,18 @@
     </el-col>
 
     <!--列表-->
-    <el-table :data="coaches" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
+    <el-table :data="rules" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
       <el-table-column type="selection" width="55">
       </el-table-column>
       <el-table-column type="index" width="60">
       </el-table-column>
-      <el-table-column prop="name" label="姓名" width="120" sortable>
+      <el-table-column prop="courseName" label="课程名称 " width="180" sortable>
       </el-table-column>
-      <el-table-column prop="sex" label="性别" width="80" :formatter="formatSex" sortable>
+      <el-table-column prop="periods" label="报名期数" width="120"  sortable>
       </el-table-column>
-      <el-table-column prop="birth" label="生日" width="120" sortable>
+      <el-table-column prop="freeSections" label="赠送节数" width="120" sortable>
       </el-table-column>
-      <el-table-column prop="telphone" label="电话" width="140" sortable>
-      </el-table-column>
-      <el-table-column prop="addr" label="地址" min-width="180" sortable>
+      <el-table-column prop="memo" label="备注" width="200" sortable>
       </el-table-column>
       <el-table-column label="操作" width="150">
         <template scope="scope">
@@ -59,24 +47,17 @@
     <!--编辑界面-->
     <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="editForm.name" auto-complete="off"></el-input>
+        <el-form-item label="课程名称" prop="courseName">
+          <el-input v-model="editForm.courseName" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="性别">
-          <el-radio-group v-model="editForm.sex">
-            <el-radio class="radio" :label="1">男</el-radio>
-            <el-radio class="radio" :label="0">女</el-radio>
-          </el-radio-group>
+        <el-form-item label="报名期数">
+          <el-input-number  v-model="editForm.periods"></el-input-number>
         </el-form-item>
-       
-        <el-form-item label="生日">
-          <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
+        <el-form-item label="赠送节数">
+          <el-input-number v-model="editForm.freeSections"></el-input-number>
         </el-form-item>
-         <el-form-item label="电话">
-          <el-input v-model="editForm.telphone"></el-input>
-        </el-form-item>
-        <el-form-item label="地址">
-          <el-input type="textarea" v-model="editForm.addr"></el-input>
+        <el-form-item label="备注">
+          <el-input type="textarea" v-model="editForm.memo"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -88,23 +69,17 @@
     <!--新增界面-->
     <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
       <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="addForm.name" auto-complete="off"></el-input>
+        <el-form-item label="课程名称" prop="courseName">
+          <el-input v-model="addForm.courseName" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="性别">
-          <el-radio-group v-model="addForm.sex">
-            <el-radio class="radio" :label="1">男</el-radio>
-            <el-radio class="radio" :label="0">女</el-radio>
-          </el-radio-group>
+        <el-form-item label="报名期数">
+          <el-input-number v-model="addForm.periods"></el-input-number>
         </el-form-item>
-        <el-form-item label="生日">
-          <el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
+        <el-form-item label="赠送节数">
+          <el-input-number v-model="addForm.freeSections" ></el-input-number>
         </el-form-item>
-        <el-form-item label="电话">
-          <el-input v-model="addForm.telphone" ></el-input>
-        </el-form-item>
-        <el-form-item label="地址">
-          <el-input type="textarea" v-model="addForm.addr"></el-input>
+        <el-form-item label="备注">
+          <el-input type="textarea" v-model="addForm.memo"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -124,11 +99,9 @@
     data() {
       return {
         filters: {
-          name: '',
-          sex: '',
-          telphone: ''
+          courseName: '',
         },
-        coaches: [],
+        rules: [],
         total: 0,
         page: 1,
         listLoading: false,
@@ -144,11 +117,10 @@
         //编辑界面数据
         editForm: {
           id: 0,
-          name: '',
-          sex: -1,
-          telphone: 0,
-          birth: '',
-          addr: '',
+          courseName: '',
+          periods: -1,
+          freeSections: 0,
+          memo: '',
         },
 
         addFormVisible: false,//新增界面是否显示
@@ -160,11 +132,10 @@
         },
         //新增界面数据
         addForm: {
-          name: '',
-          sex: -1,
-          telphone: 0,
-          birth: '',
-          addr: '',
+          courseName: '',
+          periods: -1,
+          freeSections: 0,
+          memo: '',
         }
 
       }
@@ -182,16 +153,14 @@
       getRules() {
         let para = {
           page: this.page,
-          name: this.filters.name,
-          sex: this.filters.sex,
-          telphone: this.filters.telphone
+          courseName: this.filters.courseName,
         };
         this.listLoading = true;
         getRuleListPage(para).then((res) => {
           debugger;
           if( res && res.data){
             this.total = res.data.total;
-            this.coaches = res.data.coaches;
+            this.rules = res.data.rules;
           
           }
           this.listLoading = false;

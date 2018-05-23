@@ -36,13 +36,17 @@
       </el-table-column>
       <el-table-column prop="registerDate" label="报名日期" width="120" sortable>
       </el-table-column>
+      <el-table-column prop="periods" label="报名期数" width="120" sortable>
+      </el-table-column>
+      <el-table-column prop="totalSections" label="总节数" width="120" sortable>
+      </el-table-column>
       <el-table-column prop="courseName" label="课程名称" width="180" sortable>
       </el-table-column>
        <el-table-column prop="courseGrade" label="课程级别" width="120" :formatter="formatGrade" sortable>
       </el-table-column>
        <el-table-column prop="coursePhase" label="课程阶段" width="120" :formatter="formatPhase" sortable>
       </el-table-column>
-      <el-table-column prop="coursePrice" label="学费" width="120" sortable>
+      <el-table-column prop="totalFee" label="学费" width="120" sortable>
       </el-table-column>
       <el-table-column prop="payoff" label="是否已缴纳" width="120" :formatter="formatPayoff" sortable>
       </el-table-column>
@@ -52,6 +56,7 @@
       <el-table-column label="操作" width="150" fixed="right">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button type="text" size="small" @click="handleAudit(scope.$index, scope.row)">审核</el-button>
           <el-button type="text" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -66,7 +71,10 @@
     </el-col>
 
     <!--编辑界面-->
-    <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false" width="80%">
+    <el-dialog  :visible="editFormVisible" :close-on-click-modal="false" width="80%" ref="dialog">
+      <template slot-title="scope">
+        <span class="formTitle">{{formTitle}}</span>
+      </template>
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
         <el-row :gutter="20">
           <el-col :span="6"><div class="grid-content bg-purple"></div>
@@ -123,8 +131,17 @@
             </el-form-item>
           </el-col>
           <el-col :span="6"><div class="grid-content bg-purple"></div>
-            <el-form-item label="课程名称" prop="name">
-              <el-input v-model="editForm.name" auto-complete="off"></el-input>
+            <el-form-item label="课程名称" prop="course">
+            <el-select v-model="editForm.course" filterable placeholder="请选择" @change="setCourseDetail">
+              <el-option
+                :remote-method="getCourses"
+                v-for="item in courses"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+                >
+              </el-option>
+            </el-select>
             </el-form-item>
             <el-form-item label="级别">
               <el-select v-model="editForm.grade" placeholder="请选择" :disabled=true>
@@ -152,7 +169,7 @@
               <el-input v-model="editForm.sections" :disabled=true></el-input>
             </el-form-item>
             <el-form-item label="报名期数" >
-              <el-input-number v-model="editForm.sections" :min=1 size="small"></el-input-number>
+              <el-input-number v-model="editForm.periods" :min=1 size="small"></el-input-number>
             </el-form-item>
             <el-form-item label="赠送节数">
               <template slot-scope="scope">
@@ -163,10 +180,10 @@
           </el-col>
           <el-col :span="6"><div class="grid-content bg-purple"></div>
             <el-form-item label="总金额" >
-              <el-input v-model="editForm.totalAmout" :disabled=true></el-input>
+              <el-input v-model="editForm.totalFee" :disabled=true></el-input>
             </el-form-item>
             <el-form-item label="总节数" >
-              <el-input v-model="editForm.sections" :disabled=true></el-input>
+              <el-input v-model="editForm.totalSections" :disabled=true></el-input>
             </el-form-item>
             <el-form-item label="学费已缴" >
               <el-checkbox v-model="checked"></el-checkbox>
@@ -185,49 +202,30 @@
         <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
       </div>
     </el-dialog>
-
-    <!--新增界面-->
-    <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
-      <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="addForm.name" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="租赁日期">
-          <el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="电话">
-          <el-input v-model="addForm.telphone" ></el-input>
-        </el-form-item>
-        <el-form-item label="地址">
-          <el-input type="textarea" v-model="addForm.addr"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="addFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
-      </div>
-    </el-dialog>
+    
   </section>
 </template>
 
 <script>
   import util from '../../../common/js/util'
   //import NProgress from 'nprogress'
-  import { getRegistrationListPage, removeRegistration, batchRemoveRegistration, editRegistration, addRegistration } from './api';
+  import { getRegistrationListPage, removeRegistration, batchRemoveRegistration, editRegistration, addRegistration,getCourseList,getCourseDetail, getSchoolList } from './api';
 
   export default {
     data() {
       return {
         filters: {//过滤条件
-          name: '',
-          telphone: ''
+          courseName: '',
+          schoolName: ''
         },
         registrations: [],
+        courses: [],
+        schools:[],
         total: 0,
         page: 1,
         listLoading: false,
         sels: [],//列表选中列
-
+        formTitle:'',
         editFormVisible: false,//编辑界面是否显示
         editLoading: false,
         editFormRules: {
@@ -241,22 +239,21 @@
           name: '',
           telphone: 0,
           birth: '',
-          addr: '',
-        },
-
-        addFormVisible: false,//新增界面是否显示
-        addLoading: false,
-        addFormRules: {
-          name: [
-            { required: true, message: '请输入课程名称', trigger: 'blur' }
-          ]
-        },
-        //新增界面数据
-        addForm: {
-          name: '',
-          telphone: 0,
-          birth: '',
-          addr: '',
+          sex: '',
+          telphone:'',
+          age:0,
+          school: '',
+          parentName: '',
+          parentTelephone: '',
+          parentWX: '',
+          course:'',
+          grade:'',
+          phase:'',
+          price:'',
+          sections:'',
+          periods: 0,
+          totalFee: 0,
+          totalSections:0,
         }
 
       }
@@ -273,14 +270,13 @@
         return row.courseGrade['name'];
       },
       formatPhase: function (row, column){
-        debugger;
         return row.coursePhase['name'];
       },
       handleCurrentChange(val) {
         this.page = val;
         this.getRegistrations();
       },
-      //获取场地列表
+      //获取学员注册列表
       getRegistrations() {
         let para = {
           page: this.page,
@@ -290,7 +286,6 @@
         };
         this.listLoading = true;
         getRegistrationListPage(para).then((res) => {
-          debugger;
           if( res && res.data){
             this.total = res.data.total;
             this.registrations = res.data.registrations;
@@ -299,6 +294,51 @@
           this.listLoading = false;
         }).catch((error) => {
           this.listLoading = false;
+          console.log(error);
+        });
+      },
+      getSchools() {//获取学校列表
+        let para = {
+          name: this.editForm.school,
+        };
+        this.loading  = true;
+        getSchoolList(para).then((res) => {
+          if( res && res.data){
+            this.schools = res.data.schools;
+          }
+          this.loading  = false;
+        }).catch((error) => {
+          this.loading  = false;
+          console.log(error);
+        });
+      },
+      getCourses(){//获取课程列表
+        let para = {
+          name: '2018',
+        };
+        getCourseList(para).then((res) => {
+          if( res && res.data){
+            this.courses = res.data.courses;
+          }
+        }).catch((error) => {
+          console.log(error);
+        });
+      },
+      setCourseDetail(){
+        debugger;
+        var courseId=this.editForm.course;
+        let para = {
+          id: courseId
+        };
+        getCourseDetail(para).then((res) =>{
+          if( res && res.data){
+
+            this.editForm.grade = res.data.course.grade;
+            this.editForm.phase = res.data.course.phase;
+            this.editForm.price = res.data.course.price;
+            this.editForm.sections = res.data.course.sections;
+          }
+        }).catch((error) => {
           console.log(error);
         });
       },
@@ -323,21 +363,37 @@
           this.listLoading = false;
         });
       },
+      clearFormData() {
+        this.editForm = {
+          id:'',
+          name:'',
+          sex: '',
+          birth: '',
+          age: '',
+          height: '',
+          school: '',
+          telphone: '',
+          parentName: '',
+          parentTelephone: '',
+        };
+      },
       //显示编辑界面
       handleEdit: function (index, row) {
+        this.formTitle = '编辑';
         this.editFormVisible = true;
+        this.clearFormData();
         this.editForm = Object.assign({}, row);
       },
       //显示新增界面
       handleAdd: function () {
-        this.addFormVisible = true;
-        this.addForm = {
-          name: '',
-          sex: -1,
-          telphone: 0,
-          birth: '',
-          addr: ''
-        };
+        this.formTitle = '新增';
+        this.editFormVisible = true;
+        this.clearFormData();
+      },
+      handleAudit: function(){
+        this.formTitle = '审核';
+        this.editFormVisible = true;
+        this.clearFormData();
       },
       //编辑
       editSubmit: function () {
@@ -416,11 +472,19 @@
     },
     mounted() {//默认页面加截方法
       this.getRegistrations();
+      this.getSchools();
+      this.getCourses();
     }
   }
 
 </script>
 
 <style scoped>
-
+.formTitle{
+  position: relative;
+  top: -40px;
+  line-height: 24px;
+  font-size: 18px;
+  color: #303133;
+}
 </style>

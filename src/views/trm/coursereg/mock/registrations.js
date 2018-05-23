@@ -1,6 +1,6 @@
 import Mock from 'mockjs';
 
-import { Students } from '../../../master/student/mock/students';
+import { Students,schools } from '../../../master/student/mock/students';
 import { Courses } from '../../../master/course/mock/courses';
 
 
@@ -12,13 +12,16 @@ for (let i = 0; i < 102; i++) {
   var student=Students[Mock.Random.integer(0, Students.length-1)];
   var payoff=Mock.Random.integer(0, 1);
   var registerDate=Mock.Random.date();
+  var periods=Mock.Random.integer(1, 4);
   Registrations.push(Mock.mock({
     id: Mock.Random.guid(),
     courseName: course.name,
     courseGrade: course.grade,
     coursePhase: course.phase,
-    coursePrice: course.price,
+    totalFee: course.price * periods,
+    totalSections:course.sections * periods + periods * 4,
     payoff:payoff,
+    periods:periods,
     studentName: student.name,
     studentSchool: student.school,
     studentSex: student.sex,
@@ -29,4 +32,4 @@ for (let i = 0; i < 102; i++) {
   }));
 }
 
-export { Registrations };
+export { Registrations,Courses,schools };
